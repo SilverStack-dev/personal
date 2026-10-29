@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Review of &quot;Scientific Forth&quot; by Julian Noble</TITLE>
+   <META NAME="Author" CONTENT="Peter J Knaggs">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (Win95; I) [Netscape]">
+</HEAD>
+<BODY>
+
+<TABLE BORDER=1 WIDTH="80%" >
+<TR>
+<TD><I>Scientific Forth: A modern language for scientific computing</I>,
+by Julian V. Noble. ISBN 0-9632775-0-2, 1992, $??, 311pp, softbound. Available
+from Mechum Banks Publishing, P.O. Box 335, Charlottesville, VA 22945,
+USA.</TD>
+</TR>
+</TABLE>
+
+<P>The Forth programming language is not usually encountered within the
+context of scientific or engineering computation, although most users of
+personal computers or workstations have unwittingly experienced it in one
+form or another. Known as &quot;one of the best-kept secrets in computing&quot;,
+it lurks unseen in automatic bank teller machines, computer games, industrial
+control devices and robots. Some scientists and engineers have gained familiarity
+with Forth because it is fast, compact, and easily debugged; and because
+it simplifies interfacing microprocessors with machines and laboratory
+equipment. It was indeed originally developed for just this purpose.</P>
+
+<P>Scientific computation deserves a language that is easy to program,
+debug and maintain and that embodies the desirable features of modern structured
+languages without sacrificing the best parts of FORTRAN. The ideal language
+would simplify linking with machine code and with compiled subroutines
+from other languages. It would execute quickly while using memory parsimoniously
+for clearly, the more memory devoted to program, the less is available
+for data. Finally, it would be extensible both to new data structures and
+to new operations, so it could grow and evolve without having to be redesigned.</P>
+
+<P>Despite its small size and simple structure, Forth has all but one of
+these characteristics: In its pristine form Forth lacks any resemblance
+to FORTRAN either in structure or functionality. Fortunately, Forth is
+an easily extensible language. In this book Julian Noble takes the reader
+through the process of providing a FORTRAN based mixed arithmetic function
+library (real, complex, single- and double precision), complete with examples
+and descriptions directed to the programmer.</P>
+
+<P>While the book is intended primarily for programmers with some familiarity
+with Forth, a brief review of Forth is given, so that non-Forth programmers
+will be able to understand the program fragments. Unfortunately it was
+written some two to three years before the new ANS&nbsp;Forth standard
+was developed, with the consequence that both the text and and some of
+the program examples, appear a bit dated. This introduction chapter not
+intended as a tutorial and should not be treated as one. A Forth compiler
+is provided on an accompanying disk, along with the programming examples,
+including many that are only discussed in outline in the book.</P>
+
+<P>The book investigates the requirements of a floating point library by
+considering its use in a number of standard functions, including three
+random number routines. The library is built from basic building blocks,
+providing the reader with a unique insight into the operation of such a
+library. The use of dedicated co-processors are discussed, in a very readable
+and high-level manner, such that the 80x86 co-processor library provided
+is not only very usable, but could be converted for use with other co-processors
+(such as the MC6881, NS32081 or the PowerPC) with ease.</P>
+
+<P>Scientific work requires the use of a number of complex data structures.
+These are developed in the book from the same basic building blocks as
+the floating point library, with the objective of providing ease of use
+<I>&agrave; la</I> FORTRAN, without making the operations so &quot;smart&quot;
+they slow up the machine or become inflexible. The details relating to
+implementation methods are discussed in a very clear manner. The use of
+these data structures and the use of floating point techniques are then
+demonstrated with a number of worked examples, including: summing infinite
+series; solving transcendental equations; solving differential equations.</P>
+
+<P>The next chapter is devoted to the analysis of complex numbers, their
+implementation and use, and was found to be a very clear description of
+the complex number, intended for the programmer. The floating point library
+is developed further to incorporate complex numbers. Again, a number of
+examples are given, including: numerical quadrature, contour integration,
+fast Fourier transform (FFT) . This latter is particularly well explained
+for the non-mathamatician (viz programmers). The flexibility of the Forth
+compiler allows the generation of tables of random variates at compile
+time, permitting fast Monte-Carlo calculations that use arbitrary distribution
+functions. This is fairly original and shows the power of splitting the
+operation of a complex calculation between compile-time and run-time. This
+could be duplicated in C/C++ but it would almost certainly not be as simple,
+or as fast.</P>
+
+<P>Due to its prominence, linear algebra is covered in intricate detail,
+and again, the discussion is based around examples. The approach is down
+to earth, helps the programmer to see why the scientist would use these
+functions, and how one would go about their implementation. In the discussion
+dealing with linear algebra, the solving of linear equations, simultaneous
+linear equations, and matrix inversion are examined. The optimised program
+described will solve 350 simultaneous linear equations (single precision)
+in about 16 minutes on a old PC (an original IBM PC with 8087 co-processor),
+and about 2 minutes on the reviewer's office machine (a 486DX4-100).</P>
+
+<P>Finally a FORmula TRANslator is described, that translates FORTRAN arithmetic
+assignment statements into the corresponding Forth. This introduces some
+advanced programming techniques, such as finite state machines and recursive-descent
+parsing, in the development of the translator. Here the translator provides
+a focus for the programming examples, making the descriptions relevant
+for the programmer as well as giving the scientist an understanding of
+the requirements of programmers. The translator works by translating the
+FORTRAN expression into Forth at compile time, and not interfering with
+(and thus slowing down) the run-time system.</P>
+
+<P>It would have been more useful for the FORmula TRANslator to be given
+up front towards the start of the book, thus putting it all in context.
+A problem with this would be the use of formula to explain the algorithms,
+putring many programmers off. As it stands, however, the algorithms have
+to be justified by a number of detailed examples. As all of these examples
+are taken from the scientific programming domain, its easy for a programmer
+to see why one would need such an algorithm and a good idea as to how it
+would be implemented. This is true for most, if not all, of the examples.</P>
+
+<P>The examples used in the book are presented at a fairly low level, and
+uses some of the more esoteric features of the Forth language. However,
+you do not need to know Forth to get the most from them. The code is presented
+in a highly readable and usable manner. Indeed the Forth Interest Group
+(FIG) has adopted this style for its &quot;scientific library&quot; project,
+which aims to bring together many of the algorithms that simply could not
+be covered by a single book. In this regard it provides a wonderful collection
+of tools and shows how one should develop good software. Worked algorithms
+are given for the majority of examples in the book. When these are not
+derived into code as part of the discussion, the code is provided on the
+accompanying disk.</P>
+
+<P>For those who provide interfaces between the microprocessor and industrial
+control systems, robots, lab equipment, etc, the book provides a good introduction
+to the field of numerical analysis, and advanced programming techniques.
+It puts the algorithm into perspective by showing how the Scientist/Engineer
+would use it, and investigates some of the trade-offs necessary for implementation.
+For those who are trying to improve their interface (either making it smaller,
+faster, or providing more functionality) it presents an alternative that
+many would otherwise overlook.</P>
+
+<P>Although this book is undoubtedly aimed at programmers, the scientist/engineer
+will be introduced to the restrictions, constraints and trade-offs programmers
+are required to work with on a regular basis, giving an insight into those
+strange decisions programmers seem to make. For those wanting more control
+over their equipment, or wanting to reduce the size of their system, this
+might be one way forward, that they would probably have dismissed, if reviewed
+at all.</P>
+
+<DIV ALIGN=right><P><B>Dr. Peter Knaggs<BR>
+</B><I>Department of Computing and Information Systems,<BR>
+University of Paisley,<BR>
+High Street, Paisley.<BR>
+Scotland, PA1 2BE</I></P></DIV>
+
+<DIV ALIGN=right><P><I>E-mail: pjk@paisley.ac.uk<BR>
+Phone: +44 141 848 3545</I></P></DIV>
+
+</BODY>
+</HTML>

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="Author" content="Peter J. Knaggs" />
+  <meta name="Generator" content="CSE HTML Validator" />
+  <link rel='stylesheet' type='text/css' href='main.css' />
+  <title>Dr. Peter J. Knaggs</title>
+
+  <style type="text/css">
+#photo { width:         190px;
+		 height:        249px;
+		 float:         right;
+		 text-align:    right;  }
+#menu  { text-align:    center; }
+dd     { margin-bottom: 1ex;    }
+h1     { font-style:    italic; }
+span   { font-weight:   bold;   }
+th     { text-align:	left;   }
+  </style>
+
+  <script type="text/javascript">
+var size = 5;
+var oldsel = 5;
+var timer = setTimeout("",10);
+
+function inc(n) {
+	return 1 + (n % size);
+}
+
+function select(n) {
+	clearTimeout(timer);
+
+	var pic = document.images.pic;
+	pic.src = './images/pjk' + n + '.gif';
+	pic.alt = "Photo " + n;
+	pic.title = pic.alt;
+
+	var sel = document.getElementById("sel" + oldsel);
+	sel.style.fontWeight = "normal";
+	sel.style.textDecoration = "underline";
+	oldsel = n;
+
+	sel = document.getElementById("sel" + n);
+	sel.style.fontWeight = "bold";
+	sel.style.textDecoration = "none";
+
+	timer = setTimeout("select(inc(oldsel))", 10000);
+}
+  </script>
+</head>
+
+<body onload="select(inc(Math.round(Math.random() * 100)))">
+<h1>Dr. Peter Knaggs</h1><hr />
+
+<!-- ===================================================================== -->
+
+<div id="menu">
+  <span>Home</span>
+| <a href="about/contact.html">Contacts</a>
+| <a href="about/skills.html">Skills</a>
+| <a href="about/edu.html">Qualifications</a>
+| <a href="about/jobs.html">Experience</a>
+| <a href="about/teaching.html">Teaching</a>
+| <a href="about/papers.html">Publications</a>
+| <a href="about/hobbies.html">Hobbies</a>
+<hr />
+</div>
+
+<!-- ====================================================================== -->
+
+<div id="photo">
+	<script type="text/javascript">
+	for(n = 1; n <= size; n++) {
+		document.write(' [<a href="javascript:select(' + n + ')" ');
+		document.write('id="sel' + n + '">');
+		document.write(n);
+		document.writeln('</a>]');
+	}
+	document.writeln("<br/>");
+	</script>
+
+	<img src="./images/pjk5.gif" title="Photo" alt="Photo" id="pic" />
+</div>
+
+<dl>
+<!--
+<dt><span>Current Status</span></dt>
+<dd>Looking for gainful employment.</dd>
+-->
+
+<dt><span><a href="projects.html">Project Ideas</a></span></dt>
+<dd>A list of my project suggestions for honours level computing students.
+</dd>
+
+<!--
+<dt><span><a href="http://dec.bournemouth.ac.uk/forth/index.html">Forth Programming Language</a></span></dt>
+<dd> Information and a lot more relating to research into and with the
+	F<small>ORTH</small> programming environment.
+</dd>
+-->
+
+<!--
+<dt><span><a href="forth/index.html">Java Forth</a></span></dt>
+<dd> This is a very embryonic Java package intended to provide a Forth
+	 interpreter.
+</dd>
+-->
+
+<dt><span><a href="ARMBook/index.html">ARM Book</a>:</span> ARM Assembly Language Programming</dt>
+<dd> In 2002 I started work on a new book to help teach my students Assembly
+	 Language Programming using the ARM processor.  I no longer teach
+	 Assembly Language Programming and development of the book has since
+	 ceased.
+	 It has come to my attention that a number of people have been making
+	 copies or linking to this book without asking permission first. While
+	 I am happy for people to use the book, I would ask for the common
+	 curtsy of asking permission.
+</dd>
+</dl>
+
+<!-- ====================================================================== -->
+
+<div style="clear: both;"><hr /></div>
+<div style="float: right; width: 11em; text-align: right; font-style: italic; margin-bottom: 4px;">
+  <a href="index.html">Dr Peter Knaggs</a><br />
+  pjk<em>@</em>bcs<span>.</span>org<span>.</span>uk
+</div>
+<div style="clear: both;"><hr /></div>
+
+</body>
+</html>

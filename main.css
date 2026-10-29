@@ -1,0 +1,22 @@
+#menu {
+	text-align: center;
+}
+
+#menu span {
+	font-weight: bold;
+}
+
+#foot {
+	clear: both;
+	font-style: italic;
+	text-align: right;
+}
+
+dl dt {
+	font-weight: bold;
+}
+
+dl dd {
+	margin-bottom: 2ex;
+}
+

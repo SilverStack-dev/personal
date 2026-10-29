@@ -1,0 +1,1148 @@
+<html>
+<head>
+<title>Using IBM's NetBios from Forth by Peter Knaggs</title>
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(8);
+book[1] = new MakeItem("Gla89",  "Glass, B.: Understanding NetBios, Byte, January, 301-306, 1989.");
+book[2] = new MakeItem("IBM87",  "IBM Corporation: NetBios Application Development Guide, IBM Corportation, 1987.");
+book[3] = new MakeItem("Kna94",  "Knaggs, P. J.: Practical and Theoretical Aspects of Forth Software Development, PhD Thesis, University of Teesside School of Computing and Mathematics, 1994.");
+book[4] = new MakeItem("Nin87",  "Nine Tiles: Superlink Reference Manual, Nine Tiles, 1987.");
+book[5] = new MakeItem("Nin88a", "Nine Tiles: SimpleNet User Guide, Nine Tiles, 1988.");
+book[6] = new MakeItem("Nin88b", "Nine Tiles: SimpleNetBIOS Reference Guide, Nine Tiles, 1988.");
+book[7] = new MakeItem("Sch88",  "Schwaderer, W. D.: C Programmer's Guide to NetBIOS, Howard W. Sams & Company, 1988.");
+book[8] = new MakeItem("Ten88",  "Tenenbaum, A. S.: Computer Networks (Second ed.), Prentice Hall, 1988.");
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+function note ( text ) {
+  alert("End Note:\n\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>Using IBM's NetB<small>IOS</small> from F<small>ORTH</small></h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+A general overview of the IBM NetBios system is given and its Multi-Tasking abilities are 
+discussed.  A F<small>ORTH</small> interface that exploits these is presented along with
+an example application program, which illustrates the integration of NetBios with
+F<small>ORTH</small>'s Multi-Tasker is described.
+</blockquote>
+<p><hr><p>
+<h4>1. Introduction</h4>
+The <em>Net</em>work <em>B</em>asic <em>I</em>nput/<em>O</em>utput <em>S</em>ystem (NetBios)
+is an &quot;application program interface&quot; <a href="javascript:ref('IBM87')">[IBM87]</a>
+between an application task and a <em>L</em>ocal <em>A</em>rea <em>N</em>etwork (LAN)
+designed to provide a common communication capability between IBM PCs and compatibles.  It
+has been implemented on a wide variety of physical networks including Ethernet, Token ring,
+Insertion ring, etc.
+<p>
+NetBios provides a communication link (or connection) between named entities using two main 
+forms of communication, known as <em>sessions</em> and <em>datagrams</em>.  Any application 
+may add a name to the network.  In a F<small>ORTH</small> Multi-Tasking system it would be 
+possible to provide two separate application tasks, each with its associated name, on the 
+same host machine.  The two tasks would then communicate with each other using the NetBios 
+and neither task need know where the other is situated.
+<p>
+All requests to the NetBios are made using a <em>N</em>etwork <em>C</em>ontrol <em>B</em>lock
+(NCB) supplied by the application program.  The NCB holds parameters for the network call and, 
+on completion, contains status information.
+<p>
+<h4>2. Functions</h4>
+The functions provided by NetBios can be broken down into five groups: Naming, Sessions,
+Datagrams, Broadcasting and General Housekeeping.  (See <a href="javascript:ref('IBM87')">[IBM87]</a>
+or <a href="javascript:ref('Nin88b')">[Nin88b]</a> for a complete breakdown of the NetBios
+functions.)
+<h4><em>2.1 Naming</em></h4>
+Each network card has its own unique physical name.  To use this name in an application would be
+too restrictive as such an application would be forced to know with which physical system to
+communicate.  NetBios provides some naming capabilities to allow applications to refer to logical,
+rather than physical, names thus allowing a network application to be independent of any physical
+machine.
+<p>
+The <em>Add Name</em> function will add a given logical name to the network, provided that the name
+is unique.  This will provide a logical name for the physical system performing the add name function.
+Each physical system may have several <a href="javascript:note('NetBios limits the maximum number of
+names to 255, although in practise it is hardware limited to 16')">[1]</a> logical names that could be
+used by different tasks or applications.
+<p>
+The function <em>Add Group Name</em> will add a group name to the network.  A number of different
+physical systems can add the same group name, in which case they are considered to be a member of the
+same group.  Thus a group name is a logical name that may refer to any number of physical machines.
+This facilitates communication to a selected group of machines, perhaps with special hardware to
+facilitate certain tasks.  As with logical names each physical system may be in several different
+logical groups.  Thus any given machine may have a number of unique logical names and a number
+of group names <a href="javascript:note('NetBios does not distinguish between logical and group names,
+thus a group name uses one of the logical name slots on each machine in  the group.')">[2]</a>.
+<p>
+<em>Remove</em> is used to remove a name from the Network.  If the name is an logical name, the name
+is completely removed.  If it is a group name, the machine is removed from the group.
+<h4><em>2.2 Sessions</em></h4>
+A Session provides a one-to-one connection, analogous to a telephone call.
+<p>
+A Session is started by one application making a call to another.  The
+called application must be listening for an incoming call.  To call another
+application, the <em>Call</em> function is used.  The <em>Listen</em> function
+is used to wait for an incoming call, while <em>Hangup</em> is used to
+disconnect the call.  If you call a group name, only one member of the
+group will receive the call.  This is known as making a virtual circuit
+<a href="javascript:ref('Ten88')">[Ten88]</a>.
+<p>
+Once the connection has been established the applications can exchange data 
+(up to 64K at a time) with the guarantee that it will arrive.  To exchange 
+data, one application must use the <em>Transmit</em> function while the other 
+is using a <em>Receive</em> function.  If one side issues a transmit before 
+the other has issued the corresponding receive, the data will be buffered 
+until the receive is issued.
+<h4><em>2.3 Datagrams</em></h4>
+A datagram is a one-shot communication of up to 512 bytes.
+<p>
+If we can equate a session with a telephone call, then we can equate a
+Datagram with a letter in a postal system.  Each letter (datagram) is
+delivered separately, thus it must carry the complete destination address.
+If letter is lost the system does not time-out and automatically send a
+duplicate; error control is the user's responsibility.  Finally, letters
+do not necessarily arrive in the order they are mailed
+<a href="javascript:ref('Ten88')">[Ten88]</a>.
+<p>
+With a Session a connection is first established and data is then transmitted
+along the connection.  The connection remain open until the end of the
+session when it is terminated.  With a Datagram a new connection is
+established, the data transmitted and the connection is terminated
+for each datagram.
+<p>
+A <em>Datagram Transmit</em> will send a datagram to a given name.  The
+receiving name must be waiting to receive it otherwise it will be lost.
+When a datagram is sent to a logical name, only that name will receive
+it.  However, if it is sent to a group name, all the members of that group
+will receive a copy.
+<p>
+A <em>Datagram Receive</em> will wait for a datagram to be received by a
+given name.  A datagram transmitted from any name to the given name will
+be accepted.  A datagram receive request must be pending to receive a
+datagram, any datagram sent when a datagram receive request is not pending
+will be lost.
+<h4><em>2.4 Broadcasting</em></h4>
+A Broadcast is a special form of datagram that is sent to all names.  The
+<em>Broadcast Transmit</em> function will send a datagram to all names known
+to the network.  The <em>Broadcast Receive</em> function is similar to the
+datagram receive function, except it will only receive a Broadcast message,
+thus a broadcast message will only be received by names that have a broadcast
+receive pending.
+<h4><em>2.5 House keeping</em></h4>
+There are four basic functions that are designed for the network manager to
+control the network system.  The <em>Reset</em> function is used to totally
+reset the network card.  <em>Network Status</em> will return the current
+status of the network card.  A <em>Cancel</em> function is used to cancel
+a given command.  Finally the <em>Un-Link</em> function disconnects from a
+remote disk server.
+<h4>3. Invoking NetBios Functions</h4>
+All NetBios functions are invoked in the same manner.  The data required by
+the function is placed in the relevant fields of the NCB and the
+NetBios system call is invoked.  This will take the NCB and post it
+into the NetBios for processing.  The actual processing of the function is
+interrupt driven and will run concurrently with the application program.
+<p>
+NetBios has three different ways of returning back to the application
+program.  The first is referred to as a <em>Wait</em> function, where NetBios
+will process the complete function before returning to the application.
+<p>
+The second is to post a <em>No-Wait</em> function.  NetBios will add the
+function to its internal list of functions and return to the application
+directly.  The application program must poll the &quot;command complete&quot; flag
+of the NCB to determine if the NetBios has completed the function.
+<p>
+The final method is to post a <em>No-Wait</em> function giving the address
+of an interrupt or callback routine.  The NetBios will add the function request
+to its internal list and return to the application program.  When the function
+has been completed, it will invoke the callback routine.
+<a name="4">
+<h4>4. Multi-Tasking</h4>
+</a>
+In order to exploit the concurrent execution abilities of F<small>ORTH</small> and the
+NetBios, we use the &quot;<em>No-Wait with callback</em>&quot; invocation method.  When a
+NetBios function is used, the invoking task will typically execute a
+<code>STOP</code> after making the NetBios call.
+<p>
+In the F<small>ORTH</small>/NetBios interface, a field has been added to the NCB to
+store the identity of the invoking task.  The callback routine passed to
+the NetBios is always a &quot;<em>wake task</em>&quot; routine that extracts the task
+identity from the NCB and sets the task status to active, thus waking
+the task associated with the NetBios function.
+<p>
+More than one task can have a NetBios request pending.  For example, one task
+may be waiting on a <em>Broadcast Receive</em> whilst another is waiting on
+a <em>Datagram Transmit</em>  Any one task may have several NetBios requests
+pending.  For example, in the &quot;Net-Chat&quot; application, one of the tasks
+posts four <em>Datagram Receive</em> requests to ensure that no incoming
+datagrams are lost (see <a href="#5.2">section 5.2</a> and <a href="#9">section 9</a>).
+When the task is made active it has to poll the NCBs of the pending
+commands in order to discover which of them has completed.  The NetBios does
+not impose a limit on the number of requests pending, although a network card
+might, there is however a cost as each request <em>must</em> have a separate
+NCB.
+<h4>5. Examples</h4>
+In this section we provide the reader with two examples of how the
+F<small>ORTH</small>/NetBios interface can be used.
+<h4><em>5.1 Block Transfer</em></h4>
+To transfer a block of data from one system to another, both systems must
+make themselves known to the network.  This would be done by each of them
+creating an NCB.  They would then add their logical names to the
+network.
+<pre>
+   <i>System 1</i>                             <i>System 2</i>
+   <code>NEWNCB NCB</code>                           <code>NEWNCB NCB</code>
+   <code>" PETER" NCB ADD-NAME</code>                <code>" JOHN" NCB ADD-NAME</code>
+</pre>
+Now <code>PETER</code> may call <code>JOHN</code>.  The connection is made when Peter
+is calling John and John is listening for a call from Peter (or when John
+makes a call to Peter, although Peter must be listening for the call in this
+case).
+<pre>
+   <code>" JOHN" NCB PHONE</code>                    <code>" PETER" NCB LISTEN</code>
+   <code>STOP</code>                                 <code>STOP</code>
+</pre>
+<code>PETER</code> will now send a block of data over the network to <code>JOHN</code>.
+<pre>
+   <code>9 BLOCK</code>  ( <i>Address of buffer</i> )       <code>10 BLOCK</code>  ( <i>Address of buffer</i> )
+   <code>1024</code>     ( <i>Number of bytes</i> )         <code>1024</code>      ( <i>Number of bytes</i> )
+   <code>NCB</code>      ( <i>NCB to use</i> )              <code>NCB</code>       ( <i>NCB to use</i> )
+   <code>TX STOP</code>  ( <i>Transmit</i> )                <code>RX STOP</code>   ( <i>Receive</i> )
+</pre>
+One of the systems must now disconnect.  Our convention is that the caller
+is in charge of the connection and hence is responsible for the disconnection.
+<pre>
+   <code>NCB HANGUP</code>  ( <i>Disconnect</i> )
+</pre>
+The <code>STOP</code>s are required to allow other tasks to continue executing
+and to synchronise communications.
+<a name="5.2"><h4><em>5.2 Net-Chat</em></h4></a>
+A simple example application program has been developed along the lines of
+the &quot;Net-Chat&quot; program by Glass <a href="javascript:ref('Gla89')">[Gla89]</a>.
+This is a Citizen Band radio emulation, in that if anyone sends a message over
+&quot;Net-Chat&quot;, it will be received by all other systems running the
+application.
+<p>
+The basic principle to a &quot;Net-Chat&quot; implementation is to have a group
+name of &quot;<code>NET-CHAT</code>&quot; and an logical name for each person on the
+system.  The screen is divided into two sections with a small 5 line
+window provided for the Net-Chat display and a larger second window
+displaying the normal <code>OPERATOR</code> environment.
+<p>
+A task (&quot;<code>CHAT-TASK</code>&quot;) will post four <em>Datagram Receive</em>
+requests on the group name <code>NET-CHAT</code>.  When a datagram is sent to
+<code>NET-CHAT</code>, all the members in the group will receive a copy (including
+the sender).  When receiving messages, <code>CHAT-TASK</code> will scan through
+the NCBs to discover which one was honoured.  It will take the
+message buffer of the NCB, display it in the Net-Chat window and
+will use the NCB to post a new <em>Datagram Receive</em> request.  If
+only a single <em>Datagram Receive</em> was posted, it would be possible to
+miss a datagram that arrives between the previous datagram being received
+and the <em>Datagram Receive</em> request being re-posted.  Having multiple
+receive requests allow us to continue to receive messages while we are
+processing the first message, thus we should not miss any messages.
+<p>
+To send a message, the user must type the word <code>CHAT</code>.  This will ask
+for a message to be sent.  It will send the message buffer to the group
+name <code>NET-CHAT</code>.
+<p>
+The code and a more detailed description, is given in
+<a href="#9">section 9</a>.
+<h4>6. Problems</h4>
+As this system was originally intended for use with the Novix micro-processor system, it was
+developed using the <i>poly</i>F<small>ORTH</small> system.  For various reasons (see
+<a href="javascript:ref('Kna94')">[Kna94]</a> for more information) it was later ported 
+to the F<small>ORTH</small>++ system.  In this section we describe some of the problems
+that had to be overcome before this system became fully operational.
+<h4><em>6.1 <i>poly</i>F<small>ORTH</small></em></h4>
+The <i>poly</i>F<small>ORTH</small> system operated correctly when used in a network based
+environment.  When we loaded the NetBios interface code, the system stopped operating
+altogether.  The <i>poly</i>F<small>ORTH</small> code appeared to be correct while the
+interface code also appeared to be correct.
+<p>
+After some experimentation, we discovered that the problem only occurred when the
+<i>poly</i>F<small>ORTH</small> serial communications package was loaded.  By forcing
+the system <em>not</em> to load this package, the problem was overcome.  In order to
+continue with this project, it was necessary to convert this system for use with the
+F<small>ORTH</small>++ system.  Thus, the real cause of the problem was never investigated.
+<h4><em>6.2 Callbacks</em></h4>
+The original version of this system used the <em>No-Wait and Poll</em> method of posting 
+a NetBios function.  This meant that when an application task had posted a NetBios function, 
+it would enter a loop testing the command complete flag of the relevant NCB.  As the task 
+is actively waiting for the function to complete, it is scheduled for time by the
+multi-tasking scheduler.
+<p>
+The system was redeveloped to take advantage of the &quot;<em>No-Wait with Callback</em>&quot;
+ability of the NetBios.  The system developed to utilise this facility is described in
+<a href="#4">section 4</a>.  The task posting a NetBios function is allowed to continue
+execution.  Eventually the task will execute a <code>STOP</code>.  When the NetBios function
+has been completed the NetBios will invoke the given callback code.  This code will reset the
+associated task's status to active thereby making sure that the task will be executed.
+<p>
+This allows a task to post as many NetBios functions as it requires.  It also
+allows the task to be removed from the scheduler's active tasks list.  When
+the NetBios function has completed <a href="javascript:note('or any one of the NetBios
+functions associated with the task has been completed')">[3]</a> it will add the task
+to the active task list, thus removing the responsibility of polling the
+command complete flag altogether.
+<h4><em>6.3 Porting</em></h4>
+The port from <i>poly</i>F<small>ORTH</small> to F<small>ORTH</small>++ was a very simple
+one with only one small problem.  None of the code had to be changed with the exception of
+the two machine code words.
+<p>
+The <i>poly</i>F<small>ORTH</small> assembler system is designed to be as processor independent
+as possible, while the assembler provided with the F<small>ORTH</small>++ system is designed
+around the Intel 80x86 family of processors.  The two machine code words had to be converted
+from the <i>poly</i>F<small>ORTH</small> assembler form into the F<small>ORTH</small>++ form.
+The function of the code was not altered in any way, nor was the machine code produced altered.
+The only alteration was to the source code in order to produce the same object code.
+<p>
+We also took this opportunity to exploit F<small>ORTH</small>++'s ability of holding 64 KBytes
+of strings to enhance the error messages and improve the error handling provided by the
+interface.
+<h4>7. Comparison with C interface</h4>
+When compiled, the NetBios interface shown in <a href="#8">section 8</a> forms
+a run-time library.  The library comprises of 186 lines of F<small>ORTH</small> code and
+compiles to just 1.2 KBytes (when compiled under F<small>ORTH</small>++).  A simple C
+interface (taken from <a href="javascript:ref('Sch88')">[Sch88]</a>) takes some 110
+lines of code (1.8 KBytes when compiled) and 270 lines of compile time definitions to provide
+the same functionality as the <code>(net)</code> word.  The C interface requires the
+application developer to have a full knowledge of the NetBios and the NCB.
+A full C library that provides the same functionality as the interface given
+in <a href="#8">section 8</a> requires some 115 KBytes (when compiled using
+Microsoft C).
+<p>
+As the C language does not directly cater for multi-tasking, such an
+interface has to use the <em>No-Wait</em> or <em>No-Wait and Poll</em>
+techniques for invoking a NetBios function.  Using the <em>No-Wait and Pool</em>
+technique puts the onus on the application programmer to poll the command
+complete flag, thus does not provide the full abstraction one might hope for.
+<a name="8">
+<h4>8. Interface Code</h4>
+</a>
+The following is an annotated source listing of the NetBios Interface
+provided for use with the F<small>ORTH</small>++ system.
+<h4><em>8.1 Error Handler</em></h4>
+Here we define the word &quot;<code>(netable)</code>&quot; to display an understandable
+network error message.  It only displays the errors documented in the NetBios manual
+<a href="javascript:ref('IBM87')">[IBM87]</a>.  Any error code not defined in the
+manual will be displayed as &quot;Unknown&quot;.
+<pre><code>HEX
+: (netable)
+  CASES
+    01 CASE ." Illegal Buffer Length"   END-CASE
+    03 CASE ." Illegal Command"         END-CASE
+    05 CASE ." Timed Out"               END-CASE
+    06 CASE ." Message Incomplete"      END-CASE
+    08 CASE ." Illegal Session Number"  END-CASE
+    09 CASE ." No Resource Available"   END-CASE
+    0A CASE ." Session Closed"          END-CASE
+    0B CASE ." Command Cancelled"       END-CASE
+    0D CASE ." Local Duplicate Name"    END-CASE
+    0E CASE ." Name Table Full"         END-CASE
+    0F CASE ." Name Not Registered"     END-CASE
+    11 CASE ." Session Table Full"      END-CASE
+    12 CASE ." Call Rejected"           END-CASE
+    13 CASE ." Illegal Name Number"     END-CASE
+    14 CASE ." Destination Not Found"   END-CASE
+    15 CASE ." Name Not Found"          END-CASE
+    16 CASE ." Remote Duplicate Name"   END-CASE
+    17 CASE ." Name Deleted"            END-CASE
+    18 CASE ." Session Aborted"         END-CASE
+    21 CASE ." NetBios is busy"         END-CASE
+    23 CASE ." Invalid LAN number"      END-CASE
+    24 CASE ." Command not found"       END-CASE
+    26 CASE ." Illegal Cancel Command"  END-CASE
+    34 CASE ." Illegal Data Format"     END-CASE
+    DROP
+    ." Unknown"
+  END-CASES
+;
+</code></pre>
+We now define the default action to be taken when a network error occurs.
+This is defined in the word <code>(neterror)</code>, it will abort the current
+operation and display an error message of the form:
+<p align=center>
+Network Error code: 15 (Name Not Found)
+</p>
+Displaying the network return code and a text message relating to the code
+(if known).  Note that the word <code>?CASE</code> takes a flag of the stack and
+executes the code between the <code>?CASE</code> and the <code>END-CASE</code> if the
+flag is true, otherwise it simply skips over the code.
+<pre><code>: (neterror) ( n -- )
+  CR ." Network Error code: " DUP . ASCII ( EMIT
+  CASES
+                  FF  CASE ." Not Finished"           END-CASE
+    DUP 50 FF WITHIN ?CASE ." Hardware Fault"    DROP END-CASE
+    DUP 40 50 WITHIN ?CASE ." Unusual Condition" DROP END-CASE
+    (netable)
+  END-CASES
+  ASCII ) EMIT CR ABORT
+;
+DECIMAL
+</code></pre>
+Next we define the network error handling.  This is provided by the word
+<code>NETERROR</code>, it takes the NetBios return code and invokes the word, the
+execution token of which is stored in the user variable <code>'NETERROR</code>, if
+there has been an error, otherwise it simply removes the return code.  The
+defining word <code>USER*</code> is used to define a user variable at the next
+free slot in the user area.
+<pre><code>USER* 'NETERROR
+: NETERROR ( n -- ) 
+  ?DUP IF  'NETERROR  @ EXECUTE  THEN
+;
+</code></pre>
+Finally we initialise the network error handler to be our default error
+handler.
+<pre><code>' (neterror) 'NETERROR !</code></pre>
+<h4><em>8.2 Network Control Block</em></h4>
+In this part of the system we define the logical names for the fields of
+the network control block (NCB), these are the names as given in
+the manual.  It should be noted that we are using the <code>@</code> symbol to
+indicate a segment and offset pair in accordance with the manual.  The
+run-time action of these words is to return the address of the given field
+in the given NCB.
+<p>
+The word <code>pos</code> is a defining word, the size of the field (in bytes) is
+given on the stack, <code>pos</code> will then define a word, the action of which
+is to add the required byte offset to an address in order to give the address
+of the required field.  We have added the <code>TASK@</code> field to hold the
+address of the invoking task.  This is not part of the standard NCB
+structure but has been added to allow the callback routine to identify the
+associated task.  Finally, the constant <code>ncb_size</code> is defined to hold
+the size of our NCB structure (in bytes).
+<pre><code>: pos CREATE OVER C, + DOES> C@ + ;  
+0  \ Initial byte count
+1 pos CMD        1 pos RETCODE   1 pos LSN         1 pos NUM
+4 pos BUFFER@    2 pos LENGTH   16 pos CALLNAME   16 pos NAME
+1 pos RTO        1 pos STO       4 pos POST@       1 pos LANA_NUM
+1 pos CMD_CPLT  14 pos RESERVED  4 pos TASK@
+CONSTANT ncb_size
+</code></pre>
+Next we define some NCB control words.  The first of these is <code>NEWNCB</code>,
+this will allocate <code>ncb_size</code> bytes of memory to act as an NCB.  It also
+creates a word, the action of which is to place the address of this memory area onto
+the stack.
+<pre><code>: NEWNCB ( -- )
+  CREATE HERE ncb_size DUP ALLOT ERASE
+;
+</code></pre>
+The second control word is <code>TIME-OUT</code>, this is used to set the
+&quot;Receive&quot; and &quot;Send&quot; time-outs for a given NCB.  The time-outs are 
+given in increments of 1/2 seconds.  The system is initialised to no time-outs by default.
+<pre><code>: TIME-OUT ( Receive-Time-Out Send-Time-Out NCB -- )
+  DUP STO ROT SWAP C! RTO C!
+;
+</code></pre>
+The last of the NCB control words is <code>COPYNCB</code>.  This is used to
+copy the data from one NCB to another.
+<pre><code>: COPYNCB ( Source-NCB Destination-NCB -- )  ncb_size CMOVE ;</code></pre>
+<h4><em>8.3 Assembler Interface</em></h4>
+This is where we have developed the assembler code that interfaces between
+the F<small>ORTH</small>++ system and the NetBios.
+<p>
+First, we define a word <code>FIELD</code> that returns the byte offset of a named
+field in the NCB.  As this word is being defined exclusively for use
+in code level definitions, we place its definition in the <code>ASSEMBLER</code>
+wordlist.
+<pre><code>ASSEMBLER DEFINITIONS
+: FIELD ' >BODY C@ ;
+FORTH DEFINITIONS
+</code></pre>
+We now define the assembler word <code>(post)</code>.  This is the callback
+<a href="javascript:note('NetBios refers to callbacks as \'post\' routines')">[4]</a>
+code that is invoked by NetBios when it has completed a <em>No-Wait with Callback</em>
+operation.  On entry to this code, the <code>ES:BX</code> register pair are pointing to the
+start of the NCB that has completed, the status of all other registers are unknown, thus we
+can not make any assumptions about the state of the system (other than the value of
+<code>ES:BX</code>).  The callback routine uses the address stored in the <code>TASK@</code>
+field of the NCB to discover which task is related to the NCB.  It will then place a
+1 in that task's <code>STATUS</code> variable, thereby adding that task to the scheduler
+active task list.
+<pre><code>CREATE-INTERRUPT (post)
+  DS PUSHSEG   BX PUSH   AX PUSH   ES AX MOV   AX DS MOV
+  FIELD TASK@ 2+ ) BX@ AX MOV   AX PUSH
+  FIELD TASK@ ) BX@ AX MOV   AX BX MOV
+  DS POPSEG   1 # USER STATUS MOV
+  AX POP   BX POP   DS POPSEG
+IRET
+END-CODE
+</code></pre>
+This code is given as it is provided in the F<small>ORTH</small>++ interface.  We now
+give the code again in a commented Intel assembler format.
+<pre><code>post: push ds          ; Save the registers
+      push bx          ;   we are going to use
+      push ax
+      mov  ax,es       ; Copy ES to DS
+      mov  ds,ax
+      mov  ax,[bx+66]  ; Get the DS for the task
+      push ax          ; Save it for later
+      mov  ax,[bx+64]  ; Get the offset of the task
+      mov  bx,ax       ; Save in BX
+      pop  ds          ; Recover task's DS
+      mov  [bx+0],#1   ; Set task's status to active
+      pop  ax          ; Recover registers
+      pop  bx
+      pop  ds
+      iret             ; Return from interrupt
+</code></pre>
+The next word we define is <code>(net)</code>.  This word will initialise the
+NCB with a given command (<code>CMD</code>), buffer (<code>BUFFER@</code>) and
+post routine (<code>POST@</code>).  It will then invoke the NetBios interrupt
+asking the NetBios to perform the function indicated by the command number.
+The <code>POST@</code> value passed to this word is the 16 bit offset of the
+<code>(post)</code> routine.  If this offset is 0, an address of <code>0000:0000</code>
+is placed in the <code>POST@</code> field.  When the NetBios returns from the
+interrupt it provides a &quot;return value&quot; that is passed back to the calling
+word.
+<pre><code>HEX
+CODE (net) ( NCB Buffer Command 'Post -- Retcode )
+  CX POP   AX POP   DX POP   DI POP
+  AL FIELD CMD ) DI@ MOV   DS AX MOV
+  AX FIELD BUFFER@ 2+ ) DI@ MOV   DX FIELD BUFFER@ ) DI@ MOV
+  CX AX MOV   0 # AX = NOT        IF  CS AX MOV  THEN
+  AX FIELD POST@ 2+ ) DI@ MOV     CX FIELD POST@ ) DI@ MOV
+  DS AX MOV
+  AX FIELD TASK@ 2+ ) DI@ MOV     BX FIELD TASK@ ) DI@ MOV
+  ES PUSHSEG   BX PUSH   DS AX MOV   AX ES MOV   DI BX MOV
+  5C INT   BX POP   ES POPSEG   0 # AH MOV   AX PUSH
+NEXT
+END-CODE
+DECIMAL
+</code></pre>
+Again, this code is given as it is provided in the F<small>ORTH</small>++ interface.  We
+now give a version of the same code, with comments, in Intel assembler format.
+<pre><code>net:  pop   cx             ; CX = POST@ offset
+      pop   ax             ; AX = NetBios command
+      pop   dx             ; DX = BUFFER@ offset
+      pop   di             ; DI = NCB offset
+      mov   [di+00],al     ; Set NetBios command in the NCB
+      mov   ax,ds
+      mov   [di+06],ax     ; Set the BUFFER@ segment to the current DS
+      mov   [di+04],dx     ; Set BUFFER@ to the given offset
+      mov   ax,cx          ; Is POST@ offset zero?
+      cmp   ax,#0
+      jne   $1             ; Yes, then AX and CX = 0
+      mov   ax,cs          ;  No, then set AX to current CS
+$1:   mov   [di+46],ax     ; Set POST@ segment to CS (0000 if CX=0000)
+      mov   [di+44],cx     ; Set POST@ offset to CX
+      mov   ax,ds
+      mov   [di+66],ax     ; Set TASK@ segment to current DS
+      mov   [di+64],bx     ; Set TASK@ offset to task user area
+      push  es             ; Save registers ES:BX
+      push  bx
+      mov   ax,ds
+      mov   es,ax          ; ES:BX = NCB address
+      mov   bx,di
+      int   5Ch            ; Invoke NetBios interrupt
+      pop   bx             ; Recover ES:BX
+      pop   es
+      mov   ah,#0          ; Clear top byte of "Return Value"
+      push  ax             ; Return "Return value"
+      NEXT                 ; Re-enter inner interpreter
+</code></pre>
+<h4><em>8.4 Low-Level interface</em></h4>
+The next part of the interface defines the low-level F<small>ORTH</small> words that
+are used to interface with the assembler definitions.
+<p>
+The first of these words is <code>+NET</code>.  It will post a NetBios function
+and wait for it to complete before returning.  It will then process the
+&quot;Return Value&quot;, checking it for errors.
+<pre><code>: +NET ( Buffer NCB Command -- )
+  ROT SWAP 0 (net) NETERROR
+;
+</code></pre>
+The second word being <code>-NET</code> which will post a network function to
+the NetBios system using the <em>No-Wait with Callback</em> variant of the
+command.  The calling task will be placed in the scheduler's active list on
+completion of the function.  However, the task is not removed from the
+active list by this word.  This is left to the application.
+<pre><code>: -NET ( Buffer NCB Command -- )
+  128 OR ROT SWAP (post) (net) NETERROR
+;
+</code></pre>
+We now define the word <code>COMPLETE</code> to check the NCB command
+complete (<code>CMD_CPLT</code>) flag.  It will return a <code>TRUE</code> when the
+function has completed.  This word is provided so that an application may
+test which of several possible NetBios commands has been honoured (see
+<a href="#4">section 4</a> and <a href="#5.2">section 5.2</a> for
+a description of its use and <a href="#9.2">section 9.2</a> for an example 
+of its use).
+<pre><code>: COMPLETE ( NCB -- f )
+  CMD_CPLT C@ 255 = NOT
+;
+</code></pre>
+The final definition in this section is <code>NERROR</code> which is used in
+conjunction with the <code>COMPLETE</code> word.  It will check the return code
+(<code>RETCODE</code>) of a given NCB returning the NetBios return code, if
+the function associated with the NCB has completed, otherwise it
+returns a -1.
+<pre><code>: NERROR ( NCB -- n )
+  DUP COMPLETE IF RETCODE C@ ELSE DROP -1 THEN
+;
+</code></pre>
+<h4><em>8.5 General Support</em></h4>
+Here we define a number of words for the general administration of the
+network.  Most of these commands would only be used by a supervisor or
+supervising software.  These commands do not have <em>No-Wait</em> variants,
+thus they all wait for the NetBios command to complete before returning to
+the caller.
+<p>
+<code>NET-RESET</code> will <em>Reset</em> the network with the support for the
+given number of sessions and the given number of outstanding commands using
+the given NCB.
+<pre><code>: NET-RESET ( #sessions #commands NCB -- )
+  DUP >R NUM C! R@ LSN C! 0 R> 50 +NET
+;
+</code></pre>
+<code>NET-CANCEL</code> is used to <em>Cancel</em> a NetBios command.  The NetBios
+command associated with <code>NCB1</code> is cancelled (removed from the
+command-pending list).  Due to the way that the NetBios system operates, it
+requires a second NCB to be used to issue the cancel command.
+<pre><code>: NET-CANCEL ( NCB1 NCB2 -- )  53 +NET ;</code></pre>
+The <code>UNLINK</code> word will disconnect the node from the &quot;Remote Program
+Link&quot;.  This is only used when booting the system over a network.
+<pre><code>: UNLINK ( NCB -- )       DUP 112 +NET ;</code></pre>
+Finally the <code>NET-STAT</code> word returns the current status of the network
+to the given buffer (<code>addr</code>) of a given maximum size (<code>len1</code>
+bytes).  Returning the number of bytes (<code>len2</code>) of actual data
+received.  This data is dependent on both the network hardware and the
+particular NetBios implementation.
+<pre><code>: NET-STAT ( addr len1 NCB -- len2 )
+  SWAP OVER LENGTH DUP >R ! DUP CALLNAME ASCII * SWAP C!
+  51 +NET R> @
+;
+</code></pre>
+<h4><em>8.6 Naming Support</em></h4>
+In this section we define the F<small>ORTH</small> words that will give the programmer
+access to the NetBios &quot;Naming&quot; functions.
+<p>
+Firstly, the word <code>(name)</code> is defined.  This word takes a counted
+string (<code>s</code>) as a symbolic name.  It will place the name in the given
+<code>NCB</code>'s <code>NAME</code> field.  This takes a fixed 16 character name, thus
+<code>(name)</code> also pads out the field with zeros.  Having copied the name
+into the <code>NAME</code> field, it will then invoke the NetBios function given in
+<code>n</code> (either <em>Add Name</em> or <em>Add Group Name</em>).  Notice that
+it uses <code>+NET</code> to invoke the function, thus the system will wait for
+the name to be added to the local name table before returning.  This word
+forms the bases of both the <code>ADD-NAME</code> and <code>ADD-GROUP</code> words.
+<pre><code>: (name) ( s NCB n -- )
+  >R DUP NAME DUP 16 ERASE ROT COUNT ROT SWAP CMOVE
+  0 SWAP R> +NET
+;
+</code></pre>
+The word <code>ADD-NAME</code> is used to add an logical name to the list of
+logical names for this node.  It takes a counted string (<code>s</code>) and an
+<code>NCB</code>.  It will add the name to the system, associating the name with
+the NCB.  Any command sent out using that NCB will be issued
+under the given name.  You must copy the NCB if you wish to post more
+than one (simultaneous) command under this name.
+<pre><code>: ADD-NAME  ( s NCB -- )  48 (name) ;</code></pre>
+The <code>ADD-GROUP</code> command works in much the same way as the
+<code>ADD-NAME</code> command with the one exception that the name added to the
+local node is a group name.  Thus several different nodes may be known by
+the same name.
+<pre><code>: ADD-GROUP ( s NCB -- )  54 (name) ;</code></pre>
+The final word in this section is <code>REMOVE-NAME</code>.  This will remove the
+name associated with the <code>NCB</code> from the local name table.  If the
+NCB is associated with a group name, the node is removed from the
+group.  The name is disassociated from the <code>NCB</code>, thus allowing the
+<code>NCB</code> to be associated with another name.
+<pre><code>: REMOVE-NAME (   NCB -- )  0 SWAP 49 +NET ;</code></pre>
+<h4><em>8.7 Session Support</em></h4>
+In this section, we provide words that allow the application programmer to
+access the session handling facility of the NetBios.
+<p>
+Before we define the words that the application programmer is to use, we
+first define two words that perform most of the operations.  These words are
+internal to the interface and are not meant to be used by the application
+programmer.
+<p>
+The first of these is <code>(cname)</code> which takes a counted string
+(<code>s</code>) and places it in the <code>CALLNAME</code> field of the given
+<code>NCB</code>.  As with the <code>(name)</code> word, this also pads the field out to
+16 characters by adding zeros.  <code>(cname)</code> not only leaves the NCB
+address on the stack, it also places a 0 onto the stack to be used
+as a null buffer address.  See the words <code>PHONE</code> and <code>LISTEN</code> to
+see how the word is used.
+<pre><code>: (cname) ( s NCB -- 0 NCB )
+  DUP CALLNAME DUP 16 ERASE ROT COUNT ROT SWAP CMOVE 0 SWAP
+;
+</code></pre>
+The second internal word is <code>(len)</code>.  This will simply place the given
+buffer length (<code>len</code>) into the <code>LENGTH</code> field of the given
+<code>NCB</code> without removing the NCB address from the stack.
+<pre><code>: (len) ( len NCB -- NCB )
+  SWAP OVER LENGTH !
+;
+</code></pre>
+Having defined the two supporting words, we can now go on to define the
+words that the application programmer will use to gain access to the NetBios
+session capability.  As we have already likened a session connection to a
+telephone connection, we use telephone-like words in our interface.
+<p>
+The word <code>PHONE</code> is used to establish a connection.  This is similar
+to making a telephone <em>call</em> where you give the name of the
+recipient as a counted string (<code>s</code>).  If the call is being made to a
+group name, only one member of the group will receive the call.  The NetBios
+selects the group member, a one-to-one connection is made with one of
+the group members.  The particular member is not known and is
+non-deterministic.
+<pre><code>: PHONE     (        s NCB --     )   (cname) 16 -NET ;</code></pre>
+The word <code>LISTEN</code> is similar to listening for a telephone call.  You
+give the name of the node you are waiting to hear from as a counted
+string (<code>s</code>).  However, you will only hear calls from that node, if
+another node is attempting to contact this name, the <em>listen</em> command
+will not register the call.  When a call is detected, a connection
+(session) is established on both nodes.
+<p>
+There is a special name of &quot;<code>*</code>&quot; that will listen for a call from
+anyone.  When a call is detected, the session (connection) is established
+and the name of the caller is placed in the <code>CALLNAME</code> field of the
+NCB.
+<pre><code>: LISTEN    (        s NCB --     )   (cname) 17 -NET ;</code></pre>
+The word <code>HANGUP</code> is used to disconnect the session.  This is similar
+to someone hanging up the telephone to break the connection.  We use the same
+convention as is used for telephones in that the caller is responsible for
+clearing the connection.
+<pre><code>: HANGUP    (          NCB --     )    0 SWAP 18 -NET ;</code></pre>
+We now have the words that will allow one to set up a connection but we are
+still unable to transfer data over this connection.  The next two words
+provide this capability.  The connection must be established prior to any
+attempt to transmit data.
+<p>
+To transmit data over the connection (to source the data) we use the
+<code>TX</code> word.  This takes a buffer (<code>buff</code>) of <code>len</code> bytes (the
+maximum buffer size being 64 KBytes) and transmits it over the connection.
+As this is a session connection NetBios provides a guarantee that the data
+will arrive.
+<pre><code>: TX        ( Buff Len NCB --     )     (len) 20 -NET ;</code></pre>
+To sink (receive) the data the <code>RX</code> word is used.  We give the system
+a buffer area (<code>buff</code>) with a maximum size of <code>len</code> bytes where
+it can place the data when it is received.  When data has been received, the
+<code>LENGTH</code> field of the NCB will hold the actual number of bytes
+received.  If the buffer is not large enough to hold all the data, the system
+will buffer the remaining data internally and report an error.  Under these
+conditions an error code of 6 is placed in the <code>RETCODE</code> field of the
+NCB.  It is the responsibility of the application programmer to detect
+and act on this condition by issuing another receive request.
+<pre><code>: RX        ( Buff Len NCB --     )     (len) 21 -NET ;</code></pre>
+The final word in this section is <code>CALL-STAT</code> which is used to obtain
+status information on the connection (session) associated with the given
+<code>NCB</code>.  It is given a buffer (<code>buff</code>) of <code>len1</code> bytes into
+which it will place the current status.  The <code>CALL-STAT</code> word will
+return the actual number of bytes used (<code>len2</code>) by the status
+information.  The status information returned by this word is partly defined,
+however a large part of the data is dependent on the NetBios implementation.
+<pre><code>: CALL-STAT ( Buff Len1 NCB -- Len2 )
+  SWAP OVER LENGTH DUP >R ! 52 +NET R> @
+;
+</code></pre>
+<h4><em>8.8 Datagram Support</em></h4>
+This is where we develop the F<small>ORTH</small> words that will give the application
+programmer access to the &quot;Datagram&quot; communication level provided by the
+NetBios.  A datagram can be thought of as a packet of up to 512 bytes on the
+network.  Unlike session communication, there is no built-in protocol
+associated with datagrams.  The receiving node <em>must</em> be listening for
+an incoming datagram, otherwise it will not receive it.  The NetBios provides
+no guarantee that the datagram will be delivered.
+<p>
+The first word we define in this section is <code>DTX</code>, the <em>Datagram
+Transmit</em> function.  This will take an area of memory (<code>buff</code>) of
+<code>len</code> bytes in length (maximum size being 512 Bytes).  This is sent, as
+a single unit, to the indicated node (whose name is given as the counted string
+<code>s</code>).
+<p>
+Notice how this word uses <code>(cname)</code> to copy the destination node name
+into the <code>CALLNAME</code> field of the NCB.  The <code>NIP</code> is required
+to disregard the extra <code>0</code> that <code>(cname)</code> places on the stack.
+We use <code>(len)</code> to copy the byte length into the <code>LENGTH</code> field of
+the NCB.  We can make the NetBios call with the <code>-NET</code> word.
+<pre><code>: DTX ( Buff Len s NCB -- )
+  (cname) NIP (len) 32 -NET
+;
+</code></pre>
+The <em>Datagram Receive</em> function is provided by the word <code>DRX</code>.
+This is given an area of memory to place the received data (<code>buff</code>)
+which is a maximum size of <code>len</code> bytes (maximum buffer size is
+512 bytes).  This word will wait for an incoming datagram addressed to the
+name associated with the NCB.  On receiving a datagram, it will place
+as much data as it can in the buffer returning the actual number of bytes
+received in the <code>LENGTH</code> field of the NCB.  Note that if the
+received datagram was too large for the receiving buffer, the buffer
+is filled, the remaining data is lost, and a return value of 6 is
+given (in the <code>RETCODE</code> field).  The name of the sending node is
+placed in the <code>CALLNAME</code> field.  See <a href="#9.2">section 9.2</a>
+for an example of using datagrams.
+<pre><code>: DRX ( Buff Len NCB -- )  (len) 33 -NET ;</code></pre>
+<h4><em>8.9 Broadcast Support</em></h4>
+In this, the final part of the interface, we define the words that provide
+access to the NetBios &quot;Broadcast&quot; commands.  A broadcast can be thought of
+as sending a datagram to everybody.  If you are not listening for a
+broadcast, you will miss it.  Like the datagram it will not be buffered for
+you.  As with datagram support, we only need two words to provide broadcast
+support, one to transmit and one to receive.
+<p>
+The first of these words is <code>BTX</code>, providing the <em>Broadcast
+Transmit</em> function.  This takes the address of the memory buffer
+(<code>buff</code>) of <code>len</code> bytes in length (maximum size of 512 bytes).
+The data is then transmitted to every node on the system.
+<pre><code>: BTX ( Buff Len NCB -- )  (len) 34 -NET ;</code></pre>
+The second word required to provide broadcast support is <code>BRX</code>,
+providing the <em>Broadcast Receive</em> function.  As with <code>DRX</code>, the
+address of a receive buffer is given (<code>buff</code>) with a maximum length of
+<code>len</code> (maximum buffer size is 512 bytes).  When the system receives a
+broadcast message, it will place up to <code>len</code> bytes in the buffer
+loosing any additional data.  The <code>LENGTH</code> field holds the actual
+number of bytes received.  The <code>CALLNAME</code> field will hold the name of
+the sending node.  If more than one <em>Broadcast Receive</em> is posted,
+they will <em>all</em> receive the same message.
+<pre><code>: BRX ( Buff Len NCB -- )  (len) 35 -NET ;</code></pre>
+It should be noted that the words <code>(netable)</code>, <code>(neterror)</code>,
+<code>pos</code>, <code>FIELD</code>, <code>(post)</code>, <code>(net)</code>,
+<code>+NET</code>, <code>-NET</code>, <code>(name)</code>, <code>(cname)</code> and
+<code>(len)</code> are internal to the interface and should not be used when programming
+applications with this package.
+<a name="9">
+<h4>9. The &quot;Net-Chat&quot; Application</h4>
+</a>
+The following is an annotated source listing of the &quot;Net-Chat&quot; example
+application as described in <a href="#5.2">Section 5.2</a>.
+<h4><em>9.1 Memory Buffers</em></h4>
+The first part of the application is to reserve the memory buffers that are
+going to be used.  This section not only reserves the memory but also
+defines words that allow easy access to this memory.
+<p>
+We are going to require five NCBs and buffers.  We first reserve the
+space for the five NCBs (one outgoing, four incoming).  The number
+of bytes to reserve is calculated by multiplying the number of bytes
+required for an NCB (<code>ncb_size</code>) by five.  We then initialise
+this memory to zeros using the <code>ERASE</code> word.
+<pre><code>CREATE ncbs   ncb_size 5 * ALLOT   ncbs ncb_size 5 * ERASE</code></pre>
+Thus the word <code>ncbs</code> will return the start address of a block of
+memory large enough to hold five NCBs.  We now define a word
+<code>NCB</code> that take an NCB number and returns the address of the
+indicated NCB from our table.
+<pre><code>: NCB  ( n -- NCB )       ncb_size * ncbs + ;</code></pre>
+Now we do the same for the data buffers.  This time the buffers are 60 bytes
+long and is given the name <code>buff</code>, while the accessing word is called
+<code>BUFF</code>.
+<pre><code>CREATE buff         60 5 * ALLOT    buff  60 5 *  ERASE
+: BUFF ( n -- buff )      60 * buff +       ;
+</code></pre>
+We now define the word <code>name</code> that takes an NCB number and
+initialises the stack ready for a NetBios call to the <em>Datagram
+Receive</em> function, placing the corresponding buffer address (<code>buff</code>),
+the maximum size of the buffer (60) and the indicated NCB
+(<code>NCB</code>) on the stack.
+<pre><code>: name ( n -- buff 60 NCB )
+  DUP BUFF SWAP NCB 60 SWAP
+;
+</code></pre>
+<a name="9.2">
+<h4><em>9.2 Listening</em></h4>
+</a>
+In this section we define the &quot;Listening&quot; part of the application.  This
+code will post four <em>Datagram Receives</em> to the NetBios and wait for one
+of them to be honoured.  It will then display the name of the sender and a
+one line message.
+<p>
+The first item to define is the actor that is going to execute the code
+(<code>CHAT-TASK</code>).  The actor is defined now so as to indicate that all
+the code that follows (upto the <code>CONSTRUCT</code> word) will be performed by
+the actor concurrently with the main system.
+<pre><code>ACTOR CHAT-TASK</code></pre>
+The first word we define in the section is <code>NET-LISTEN</code> which simply
+posts four <em>Datagram Receive</em> functions which will operate in unison.
+It should be noted that NCB 0 has been reserved for outgoing messages.
+<pre><code>: NET-LISTEN
+  5 1 DO
+      I name DRX
+  LOOP
+;
+</code></pre>
+When one of these <em>Datagram Receive</em> functions has been honoured, the
+system will execute the <code>NET-DISP</code> word.  This will scan through the
+NCBs to discover which of them has been honoured.  It will then
+display the name of the sender (taking it from the <code>CALLNAME</code> field)
+and the associated message.  Finally it re-posts the <em>Datagram
+Receive</em> command.
+<pre><code>: NET-DISP
+  5 1 DO                              \ Scan through the incoming NCBs
+    I NCB COMPLETE                    \ Has the command been honoured ?
+      IF
+         I NCB CR
+         CALLNAME 16 0 DO             \ Display the CALLNAME filed
+           DUP C@ ?DUP 0= IF LEAVE THEN EMIT 1+
+         LOOP DROP
+         ." : "                       \ Display a name separator
+         I BUFF I NCB LENGTH @ TYPE   \ Display the message
+         I name DRX                   \ Re-post the DRX
+      THEN
+  LOOP
+;
+</code></pre>
+The output from <code>NET-DISP</code> will be displayed in a small window at the
+top of the screen.  The following line defines the window to start at the
+top left of the screen, being 78 characters wide and 5 lines high.  The
+<code>WITH-BORDER</code> indicates that the window will have a line boarder
+displayed around it.  Finally the window will be called <code>NET-WIN</code>.
+<pre><code>1 1 78 5 WITH-BORDER CREATE-WINDOW NET-WIN</code></pre>
+The last word to be defined in this section is <code>NET-GO</code>.  This is the
+word that the <code>CHAT-TASK</code> will be asked to perform (by the <code>GO</code>
+word).  It initialises the window and posts the initial four <em>Datagram
+Receive</em> requests.  It then enters into an infinite loop waiting for one
+(or more) of the requests to be honoured when it will call the
+<code>NET-DISP</code> word to display the message and re-post the receive
+request.
+<pre><code>: NET-GO
+  NET-WIN &lt;WIN            \ Open the window.
+    *WCLEAR               \ Clear it
+    *TITLE"  Net Chat "   \ Give it a title
+    NET-LISTEN            \ Post initial four DRX commands
+    BEGIN
+      STOP                \ Wait for one to be honoured
+      NET-DISP            \ Display the message & re-post
+    AGAIN
+  WIN&gt;
+;
+</code></pre>
+The final act in this section is to indicate the completion of the code
+that is to be executed by the <code>CHAT-TASK</code> actor.  This also completes
+the definition of the actor.  Any words defined from this point on would
+not be accessible to the <code>CHAT-TASK</code> actor.
+<pre><code>CHAT-TASK CONSTRUCT</code></pre>
+<h4><em>9.3 Sending</em></h4>
+In this section we define the &quot;Sending&quot; part of the application.  In
+reality this consists of one definition.  The word <code>CHAT</code> will ask the
+user to type in a one line message.  It will then send the message as a
+datagram to the group name &quot;<code>NET-CHAT</code>&quot;, thus any node with a {\em
+Datagram Receive</em> posted on the group name <code>NET-CHAT</code> will receive a
+copy of the message (including the sending node).
+<p>
+Firstly, the word locates the outgoing message buffer (buffer 0).  It then
+erases the buffer making sure no other message is stored there.  It now
+displays a message asking the user to input the message they wish to
+transmit.  The message is read directly into the buffer with a maximum of
+60 characters in length:
+<pre>   78  Characters in the display line
+  -16  Maximum characters in user name
+   -2  Name/Message separator (&quot;<code>: </code>&quot;)
+  ===
+   60  Total allowable size of message
+</pre>
+The number of characters actually typed is taken as the size of the buffer.
+The buffer is sent to the group name <code>NET-CHAT</code> via the outgoing
+NCB (NCB 0).  Finally, the word waits for the <em>Datagram
+Transmit</em> function to complete before returning to the user.
+<pre><code>: CHAT
+  0 BUFF                               \ Find outgoing buffer
+  DUP 60 ERASE                         \ Erase buffer
+  CR ." Message: "                     \ Ask for the message
+  DUP 60 EXPECT                        \ Read in the message
+  SPAN @  " NET-CHAT"  0 NCB  DTX      \ Send the message
+  STOP                                 \ Wait for NetBios to complete
+;
+</code></pre>
+<h4><em>9.4 Initialisation</em></h4>
+In this part of the application, we provide the initilisation of the system.
+The word <code>GO</code> initialises the system for use with the &quot;Net-Chat&quot;
+application as outlined in <a href="#5.2">section 5.2</a>.
+<p>
+The first part of the initialisation is to define a word that is going to
+become the network error handler for the application.  This is a very
+simple word that simply ignores any errors.  This definition is required so
+that the <code>INIT-CHAT</code> word can examine the return code and take
+appropriate action.  (The default action will cause the system to abort
+on an error.)
+<pre><code>: NO-ERROR  DROP ;</code></pre>
+The next part of the initialisation process is coded into the word
+<code>INIT-CHAT</code>.  This initialises the network handling side of the system.
+Firstly, it replaces the standard error handling with our error handling
+system (<code>NO-ERROR</code>).  It will then ask the user to type in a unique
+name that it will use to identify the user to the other uses of the system.
+It attempts to add the name to the network (<em>Add Name</em>).  If an error
+occurs a message is displayed and the user is asked to supply an
+alternative name.
+<p>
+When the logical name has been established (on the outgoing NCB,
+NCB 0), the error handler is reset back to the default.  The
+<code>NO-ERROR</code> handler is only used to allow the word to extract the error
+code and ask for another name if necessary.
+<p>
+The group name <code>NET-CHAT</code> is added to the network (on NCB 1).
+The information placed in the NCB by the <em>Add Group Name</em>
+function is copied to the remaining incoming NCBs (2, 3 and 4).
+<pre><code>: INIT-CHAT
+  'NETERROR @                      \ Save the default error handler
+  ['] NO-ERROR  'NETERROR !        \ Reset the error handler
+  BEGIN
+    CR ." Enter your name: "       \ Ask for a name
+    0 BUFF DUP 1+ 16 EXPECT        \ Read the name (max 16 chars)
+    SPAN @ SWAP C!                 \ Make buff a counted string
+    0 BUFF 0 NCB ADD-NAME          \ Add name to Network
+    0 NCB NERROR
+  WHILE                            \ While error in Add-Name
+    CR ." Sorry, someone else is already using that name, try another."
+  REPEAT                           \ Repeat input sequence
+  'NETERROR !                      \ Reset error handler to default
+  " NET-CHAT"  1 NCB  ADD-GROUP    \ Add the group name
+  1 NCB DUP DUP
+  2 NCB COPYNCB                    \ Copy the NCB data to NCB 2
+  3 NCB COPYNCB                    \ '' NCB 3
+  4 NCB COPYNCB                    \ '' NCB 4
+;
+</code></pre>
+The window for use by the <code>OPERATOR</code> actor is now defined to be
+15 lines of 78 characters starting at line 8, complete with a line boarder.
+<pre><code>1 8 78 15 WITH-BORDER CREATE-WINDOW OP-WIN</code></pre>
+Finally, the word <code>GO</code> is defined.  This is the word that the user will
+type to initialise the &quot;Net-Chat&quot; application.
+<p>
+The first action of <code>GO</code> is to call the <code>INIT-CHAT</code> word.  Thus it
+asks for an logical name and initialise the NCBs.  <code>GO</code> will
+then clear the screen (<code>CLEAR</code>) and turn the hardware cursor off
+(<code>HWC-OFF</code>) ready for the windowing environment.  It will then redirect
+the <code>OPERATOR</code> output to the <code>OP-WIN</code> window (<code>&lt;WIN</code>).
+Finally, the actor <code>CHAT-TASK</code> is sent the message (<code>SEND"</code>) to
+initialise its window and listen for and display incoming messages
+(<code>NET-GO</code>).
+<pre><code>: GO 
+  INIT-CHAT                  \ Initialise the Network
+  CLEAR                      \ Clear the screen
+  HWC-OFF                    \ Turn the hardware cursor off
+  OP-WIN &lt;WIN                \ Redirect output to the OP-WIN window
+  *WCLEAR                    \ Clear the window
+  *TITLE"  Operator "        \ Title the window
+  CHAT-TASK SEND" NET-GO "   \ Set the CHAT-TASK listening
+;
+</code></pre>
+<h4><em>9.5 Close Down</em></h4>
+In this, the final section of the application, we provide the code that will
+close down the application.  All applications should provide a graceful
+close down, especially when they are using the services of some kind of
+server such as the NetBios.
+<p>
+There are a number of things we need to do to close down:
+  stop the <code>CHAT-TASK</code> actor;
+  remove the unique name from the system;
+  cancel any outstanding commands;
+  resign from the <code>NET-CHAT</code> group;
+  tidy up the screen.
+The order in which these events occur is quite important.  All of this can
+be accomplished in the one F<small>ORTH</small> word, <code>CLOSE-CHAT</code>.  This is the
+word that the user will type when they wish to close or leave &quot;Net-Chat&quot;.
+<p>
+Our first task is to force the <code>CHAT-TASK</code> actor to stop processing.
+This we do by forcing it to accept a new task (via the <code>MUST SEND"</code>
+operation).  We ask <code>CHAT-TASK</code> to close its window (<code>WIN></code>) and
+then to stop processing until further notice (<code>HALT</code>).  Having stopped
+<code>CHAT-TASK</code> from receiving any messages, we are now able to alter the
+status of the network.  We first remove the unique name from the
+name table (<code>REMOVE-NAME</code>).  This provides us with a free NCB
+which we use to cancel the <em>Datagram Receive</em> requests that
+<code>CHAT-TASK</code> would have posted (<code>NET-CANCEL</code>).  Notice how any
+task can cancel these requests as the NetBios is unaware of our tasking
+mechanism, thus does not consider a NetBios request to be owned by any
+particular task.
+<p>
+We are no longer able to send a message as we do not have a unique name.  We
+are no longer able to see messages as <code>CHAT-TASK</code> is not running.  We
+are no longer listening for messages sent to the <code>NET-CHAT</code> group as we
+have just cancelled all such requests.  Thus we are now in a position to be
+able to resign our membership of the <code>NET-CHAT</code> group
+(<code>REMOVE-NAME</code>).  Finally, we close the operations window (<code>WIN></code>)
+and re-establish the cursor (<code>HWC-ON</code>).
+<pre><code>: CLOSE-CHAT
+  CHAT-TASK MUST SEND" WIN> HALT"     \ Close NET-WIN and stop the task
+  0 NCB REMOVE-NAME                   \ Remove the outgoing unique name
+  1 NCB  0 NCB  NET-CANCEL            \ Cancel the DRX commands
+  2 NCB  0 NCB  NET-CANCEL
+  3 NCB  0 NCB  NET-CANCEL
+  4 NCB  0 NCB  NET-CANCEL
+  1 NCB REMOVE-NAME                   \ Remove the group name
+  WIN>                                \ Close OP-WIN
+  HWC-ON                              \ Turn hardware cursor on
+;
+</code></pre>
+If the user wanted to restart the application, he would simply type <code>GO</code>
+and he would be back in the application.
+<h4>10. Acknowledgments</h4>
+The work presented in this paper was preformed as a part of a research
+project supported by the UK Science and Engineering Research Council with
+a CASE award (number B/88502911) and Computer Solutions Ltd and documented
+in <a href="javascript:ref('Kna94')">[Kna94]</a>.  I would like to thank
+Andrew Haley of Computer Solutions Ltd. for giving me the idea and Bill
+Stoddart, my research supervisor, for his gidance and for simply putting up
+with me.
+<h4>11. References</h4>
+<dl compact>
+<dt> [Gla89]
+<dd> Glass, B.: Understanding NetBios, <em>Byte</em>, January, 301-306, 1989.
+<p>
+<dt> [IBM87]
+<dd> IBM Corporation: <em>NetBios Application Development Guide</em>, IBM Corportation, 1987.
+<p>
+<dt> [Kna94]
+<dd> Knaggs, P. J.: Practical and Theoretical Aspects of Forth Software Development,
+	PhD Thesis, University of Teesside School of Computing and Mathematics, 1994.
+<p>
+<dt> [Nin87]
+<dd> Nine Tiles: <em>Superlink Reference Manual</em>, Nine Tiles, 1987.
+<p>
+<dt> [Nin88a]
+<dd> Nine Tiles: <em>SimpleNet User Guide</em>, Nine Tiles, 1988.
+<p>
+<dt> [Nin88b]
+<dd> Nine Tiles: <em>SimpleNetBIOS Reference Guide</em>, Nine Tiles, 1988.
+<p>
+<dt> [Sch88]
+<dd> Schwaderer, W. D.: <em>C Programmer's Guide to NetBIOS</em>, Howard W. Sams &amp; Company, 1988.
+<p>
+<dt> [Ten88]
+<dd> Tenenbaum, A. S.: <em>Computer Networks</em> (Second ed.), Prentice Hall, 1988.
+</dl>
+<h4>End Notes</h4>
+<ol>
+<li> <a name="fn1">NetBios limits the maximum number of names to 255,
+	although in practise it is hardware limited to 16.</a>
+<p>
+<li> <a name="fn2">NetBios does not distinguish between logical and group
+	names, thus a group name uses one of the logical name slots on each
+	machine in the group.</a>
+<p>
+<li> <a name="fn3">Or any one of the NetBios functions associated with the
+	task has been completed</a>
+<p>
+<li> <a name="fn4">NetBios refers to callbacks as &quot;post&quot; routines</a>
+</ol>
+</body></html>

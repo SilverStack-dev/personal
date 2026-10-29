@@ -1,0 +1,821 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="Author" content="Peter Knaggs" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <title>Peter Knaggs: Project Ideas</title>
+  <style type="text/css">
+    .email { font-style: italic; font-weight: bold; }
+    body { text-align: justify; }
+    h2 { font-style: italic; }
+    dl { margin-left: 1pc; margin-right: 1pc; }
+    dd { margin-bottom: 2ex; }
+  </style>
+  <script type="text/javascript">
+    function rmail(where,who) {
+      var str = where + "@" + who;
+      var txt = str.split("");
+      str = txt.reverse();
+      return str.join("");
+    }
+  </script>
+</head>
+<body>
+<h2>Dr. Peter Knaggs: Project Ideas</h2><hr />
+
+<p>
+The following are ideas or suggestions for projects I would like to
+see undertaken. They are all within the scope of an individual project.
+You may adopt any of these suggestions without having me as your
+supervisor, although they can be used as a guide to the nature of
+project I would be interested in supervising.  If you are interested
+in any of these projects you can contact me at
+<span class="email">
+  <script type="text/javascript">
+    document.write(rmail("ku.oc.scb","kjp"));
+  </script>
+</span>.
+</p>
+
+<table style="border: none;">
+<tbody><tr style="vertical-align: top;"><td><ul>
+<li> <a href="#compilers">Compilers</a></li>
+<li> <a href="#opt">Code Optimisation</a></li>
+<li> <a href="#forth">The Forth Programming Environment</a></li>
+<li> <a href="#embed">Real-Time/Embedded Systems</a></li>
+<li> <a href="#formal">Formal Methods</a></li>
+<li> <a href="#latex">LaTeX Document Processing System</a></li>
+</ul></td><td><ul>
+<li> <a href="#folk">Folk Music</a></li>
+<li> <a href="#opsys">Operating Systems</a></li>
+<li> <a href="#sysadmin">Systems Administration</a></li>
+<li> <a href="#teach">Teaching Aids</a></li>
+<li> <a href="#ent">Enterprise Computing</a></li>
+</ul></td></tr>
+</tbody></table>
+
+<!-- ========== Compilers ========== -->
+
+<hr />
+<h3><a id="compilers">Compiler</a> Related Projects</h3>
+<dl>
+  <dt> <b>Programme Compare</b></dt>
+  <dd>
+	This is a method of providing an automatic marking system for
+	programming related assignments. The system will compare two
+	source code programs, a model answer and the students submission,
+	and provide a rating as to how similar the two programs are.
+	It can do this by converting the source into an abstract syntax
+	tree, and comparing the trees. In this way the order of functions,
+	variables name, program syntax, and comments, can be ignored.
+	Thus only the basic program structure is actually compared. This
+	project would be partially interesting to any student interested
+	in programming languages, and compilers.
+  </dd>
+
+  <dt> <b>Pretty Print</b></dt>
+  <dd>
+    The school has now adopted a standard programming style for C, C++,
+    and Java programs. A <em>pretty print</em> program is required,
+    which would take a program source and reformat it into the new
+    standard layout. This program could be extended to rewrite part
+    of the program, i.e., variable names, where necessary.
+  </dd>
+
+
+  <dt> <b>Dynamic analyser</b> (Profiler)</dt>
+  <dd>
+    Dynamic analysers are tools which determine the execution path of
+    a piece of software under test. An analyser has two parts: a code
+    instrumenter which automatically adds extra statements to a source
+    code to record the execution history and a back-end which calculate
+    the test coverage and draws graphs etc. The project will implement
+    the instrumenter for a common programming language e.g. Java (or a
+    subset thereof), and construct a very basic back end.
+    This is a challenging project that requires a competent programmer.
+  </dd>
+  
+  <dt> <strong>Z Interpreter</strong> </dt>
+  <dd>
+  	The second year students frequently have difficulty understanding
+  	or developing Z specification documents.  This project would
+  	provide a tool which would read and validate a specification
+  	written in an ASCII form.  The tool should be able to identify
+  	syntax errors in the Z notation and type errors within the
+  	specification.
+  <p>
+  	Once the basic validation tool has been developed, the tool could
+  	be extended, or a new tool developed, which would allow the
+  	students to test their specifications.  The program would allow
+  	the student to initialise and examine the state schema and
+  	execute operational schemas.
+  </p>
+  	This project would be particularly well suited to students with
+  	an interest in formal notation and compilers/interpreters.
+  </dd>
+
+  <dt> <strong>SAD:</strong> State Automaton Drawing</dt>
+  <dd>
+  	During the early stages of compiler design, it is frequently
+  	necessary to draw state automata.  This project would develop
+  	a program capable of reading a description of a state automaton
+  	and producing the graph of the automaton.  The program could
+  	be extended to process the output of the bison program which is
+  	used to convert a BNF description of a grammar into an automation.
+  	It is anticipated that the dot graph generator program would be
+  	used to produce the final graph.  Thus the program would convert
+  	in the description to a form acceptable to the dot program.
+  </dd>
+
+<!--
+  <dt><strong>Javad:</strong> Java Decompiler</dt>
+  <dd>
+  	The Java compiler will convert your source code into Java
+  	byte-code, which forms the <code>.class</code> file.  In this
+  	project, the student would develop a program capable of analysing
+  	the class file and attempting to reconstruct the original
+  	<code>.java</code> file that produced it.  Several decompilers
+  	already exist, the most well known of which is Mocha which is no
+  	longer supported due to the death of its author Hanpeter van
+  	Vliet in 1996.
+  </dd>
+-->
+</dl>
+
+<!-- ========== Optimisation ========== -->
+
+<hr />
+<h3><a id="opt">Code Optimisation</a> Related Projects</h3>
+<dl>
+  <dt> <b>Virtual Machine Implementation</b></dt>
+  <dd>
+    Most virtual machines (p-code, JVM, .NET, etc) are developed as
+    stack machines, whilst most physical processors are register based
+    systems.  This project is to compare the performance of a simple
+    virtual machine which has been optimised to use none, one, two,
+    and three registers.
+  </dd>
+
+  <dt> <b>Parametric Peephole Optimiser</b></dt>
+  <dd>
+    It is my belief that much of the optimisation which can be obtained
+    from more traditional data analysts techniques, such as register
+    renaming, dynamic register allocation and data flow analysis can be
+    achieved via a simple rule-based parametric peephole optimiser.  This
+    project would be to develop two optimisers, one using traditional
+    techniques and another using the peephole optimiser to test this
+    belief.
+  </dd>
+</dl>
+
+<!-- ========== Forth ========== -->
+
+<hr />
+<h3><a id="forth">The Forth Programming Environment</a> Related Projects</h3>
+<dl>
+  <dt> <b>MinForth</b></dt>
+  <dd>
+    The ANS Forth standard defines a core language and a growing number
+    of libraries.  This project would be to produce a minimal
+    implementation of the core Forth language with the intention of
+    exploring the exact nature of a minimal Forth system.
+    It can be written in either assembler (i386, AMD64 or ARM) using
+    Subroutine Threaded Code or in a high level language (C, C++ or
+    Java) using Direct Threaded Code.
+  </dd>
+
+  <dt><strong>NetForth:</strong> A Forth based NetBeans Plugin</dt>
+  <dd>
+  	The NetBeans development environment is a good example of an
+  	extensible programming framework which can be extended with
+  	additional classes implementing the appropriate interfaces.
+  	This project would be to develop an extension to the NetBeans
+  	environment which will apply the NetBeans development features,
+  	syntax highlighting, code navigation, documentation lookup, etc,
+  	to the Forth programming language.
+  </dd>
+
+  <dt> <b>FLint:</b> Forth Lint</dt>
+  <dd>
+    The stack based language Forth is implemented in a type-free
+    manner, i.e., there are no types. There have been recent
+    developments that would allow the <em>type signature</em> of a
+    program to be derived from the type signatures of its constituent
+    operations. This project is to provide a static software analysis
+    tool (FLint) that can read a Forth source file and check the type
+    signatures.
+  </dd>
+
+  <dt> <b>WinForth:</b> A Windows/GUI API for Forth</dt>
+  <dd>
+    We have access to several Forth compilers, both commercial and
+    freeware.  There is no standard method of program windows in Forth,
+    such as Microsoft's .NET library or Sun's AWT and SWING libraries
+    for Java.
+    This project is to review the various Windows APIs (including
+    wxWindows, QT, TK and GTK) in order to develop such a Forth
+    library.
+  </dd>
+
+<!--
+  <dt> <b>Sun Forth</b></dt>
+  <dd>
+    There are a number of standard <em>virtual machine</em> or
+    <em>byte code</em> implementations of the Forth programming
+    environment. These include eForth, TpForth, and Machine Forth.
+    This project would be to provide a native implementation of one
+    of theses virtual machines for the Sun UltraSPARC workstations.
+    This would require low level programming in C and SPARC assembler.
+  </dd>
+-->
+
+  <dt> <b>OOF:</b> Object Orientated Forth</dt>
+  <dd>
+    Since the introduction of Object Orientated programming there are
+    been a number of suggestions as to how the Forth language may be
+    adapted to this method. The project is to investigate what
+    constitutes an object orientated language, rather than an object
+    based one. Suggest how these ideas can be reconciled with the
+    philosophy which underpins the Forth language.
+    The end result of this work will be a <em>survey</em> of existing
+    object orientated extensions to the Forth programming language.
+    This survey could then be used as the basis for a new extension.
+    This is a research based project.
+  </dd>
+
+  <dt> <b>FLiP:</b> Forth Literate Programming</dt>
+  <dd>
+    It has become common over the years to represent programs, not by
+    giving code or code fragments, but rather using an <em>algorithmic</em>
+    representation of the program or fragment.
+    <p>
+    Whilst this works well for <em>normal</em> imperative languages
+    (such as C, Pascal or Java) it is difficult to represent ideas for
+    other notations.
+    I.e., in functional languages (such as Scheme, SML or Hope) or
+    stack based language (such as PDF, PostScript or Forth).
+    </p><p>
+    This project is to try and find a mechanism similar to that used
+    by imperative languages to represent the algorithmic approach
+    taken by such stack based languages. The student is to develop a
+    system that does not infringe on the developer (to an unnecessary
+    extent) that will provide an equivalent algorithmic description
+    of such stack based notations.
+    </p>
+  </dd>
+</dl>
+
+<!-- ========== Real-Time ========== -->
+
+<hr />
+<h3><a id="embed">Real-Time/Embedded Systems</a> Related Projects</h3>
+<dl>
+  <dt> <b>Software Metrics for Real-Time/Embedded Systems</b></dt>
+  <dd>
+    In 1988 Tom Hand attempted to apply the McCabe cyclomatic metric
+    to a program written in Forth, a stack based language. In
+    accordance with this metric he found that the program (an 8080
+    assembler) had no complexity!  This is because Hand was
+    measuring at the wrong level of abstraction. In this project the
+    student is asked to develop a system that would allow managers to
+    collect various metrics about the software. Having collected the
+    metrics, we must then investigate the relationship between the
+    metric and <em>good software practice</em>.
+  </dd>
+
+  <dt> <b>Real-Time Processor</b></dt>
+  <dd>
+    Recent years have seen the development of a number of specialised
+    microprocessors, designed for real-time processing.  Unfortunately,
+    these processors have had to be programmed directly in assembler.
+    A new processor is proposed, which applies these techniques to the
+    development of a Real-Time microcore processor capable of executing
+    C programe code.  There are three possible projects based on this
+    processor design:
+    <ul>
+    <li style="margin-top: 1ex; margin-bottom: 1ex">
+    	The design and implementation of an emulator for this processor.
+    	This would act in a similar manner to <em>spim</em> and provide
+    	an interactive development tool for low-level (assembler based)
+    	development.
+    </li>
+    <li style="margin-bottom: 1ex">
+    	The design and implementation of a compiler for a subset of the
+    	C language that produces code for the processor.  Any number
+    	of compiler design tools could be used
+    	(<a href="http://llvm.org/">LLVM</a>,
+    	<a href="http://www.antlr.org/">ANTLR</a>,
+    	<a href="http://javacc.dev.java.net/">JavaCC</a>,
+    	<a href="http://sablecc.org/">SableCC</a>, ...).
+    	This would allow the evaluation of the processor as a C-based
+    	Real-Time Processor.
+    </li>
+    <li> The development of a <a href="http://www.verilog.com/">Varilog</a>
+    	implementation of the processor.
+    </li>
+    </ul>
+    </dd>
+</dl>
+
+<!-- ========== Formal Methods ========== -->
+
+<hr />
+<h3><a id="formal">Formal Methods</a> Related Projects</h3>
+<dl>
+  <dt> <b>VDM++ type checker</b></dt>
+  <dd>
+    Develop a tool which is capable of reading a LaTeX document which
+    incorporates a VDM specification written using Mario Wolczko's VDM
+    markup package. The tool should be able to identify syntax errors
+    in the VDM notation and type errors within the specification.
+  </dd>
+
+  <dt> <b>VDM++ Animator</b></dt>
+  <dd>
+    This would be a tool which could read a VDM specification written
+    for the VDM-Tool, which would allow the user to: test the operation
+    of the specification; view the current state; altar at the state;
+    run the operations and functions provided by the specification.
+    This could be either a command line or GUI based tool.
+  </dd>
+
+  <dt> <strong>Z Interpreter</strong> </dt>
+  <dd>
+  	The second year students frequently have difficulty understanding
+  	or developing Z specification documents.  This project would
+  	provide a tool which would read and validate a specification
+  	written in an ASCII form.  The tool should be able to identify
+  	syntax errors in the Z notation and type errors within the
+  	specification.
+  <p>
+  	Once the basic validation tool has been developed, the tool could
+  	be extended, or a new tool developed, which would allow the
+  	students to test their specifications.  The program would allow
+  	the student to initialise and examine the state schema and
+  	execute operational schemas.
+  </p>
+  	This project would be particularly well suited to students with
+  	an interest in formal notation and compilers/interpreters.
+  </dd>
+
+  <dt> <b>Proof Editor</b></dt>
+  <dd>
+    To develop an interactive proof assistant. It would display the
+    proof up to now, and then suggest what rules could be applied at
+    this point. After the user has applied the rule, it should update
+    its display and make a new selection.
+    <p></p>
+    Such a tool would be of use to students learning the use of formal
+    argument, thus it should also understand the properties of ZF
+    set-theory, and not just the rules of natural deduction.
+  </dd>
+
+  <dt> <b>FOOM:</b> Formal Object-Orientated Methods</dt>
+  <dd>
+    A number of Formal Methods have been developed which claim to work
+    with object-oriented software development. This project would review
+    and compare these methods. For this project the student would need
+    to develop a specification using a traditional notation (VDM, Z,
+    or B) and then develop an object-orientated version of the
+    specification using these new methods, namely VDM++ and Object-Z.
+    This will allow the student to compare the methods and assess
+    their suitability for use in an object-orientated development
+    life cycle.
+  </dd>
+
+<!--
+  <dt> <b>Tempura:</b> Language for Temporal Logic</dt>
+  <dd>
+    Temporal logic is a useful means of reasoning about the run-time behaviour
+    of computer programs, particularly concurrent programs. The project will
+    involve the implementation of a subset of the temporal logic programming
+    language, Tempura.
+  </dd>
+-->
+</dl>
+
+<!-- ========== LaTeX ========== -->
+
+<hr />
+<h3><a id="latex">LaTeX Document Processing System</a> Related Projects</h3>
+<dl>
+  <dt> <b>TeXpad</b></dt>
+  <dd>
+	A NotePad/WordPad style What You See Is <em>Almost</em> What You
+	Get (WYSI<em>A</em>WYG) editor for LaTeX documents.  It should only
+	use standard (LaTeX2e) commands and environments, unlike
+	<a href="http://wiki.lyx.org/Windows/Windows">LyX</a> which uses
+	custom packages.  The idea is that the program should be easy
+	for non-TeXsperts to use, thus should provide a Word/Note-pad
+	style user interface.
+  </dd>
+
+  <dt> <b>Bib Browser</b></dt>
+  <dd>
+	Develop a web based program to allow users to <em>Browse</em>
+	around a bibliography. The program will have to read the
+	bibliographic database, initially in
+	<a href="http://www.ecst.csuchico.edu/%7Ejacobsd/bib/formats/bibtex.html">BiBTeX</a>
+	format. The tool should allow the user to browse the bibliography
+	by journal, conference, book, keyword, year, author, etc.
+  </dd>
+
+  <dt> <strong>NetLaTeX:</strong> NetBeans plugin for LaTeX</dt>
+  <dd>
+  	The LaTeX document processing system includes a simple but flexible
+  	macro programming language.  This project would be to bring the
+  	development tools of the NetBeans development environment to the
+  	LaTeX macro programming language.  Of particular interest are
+  	the syntax highlighting, code navigation, documentation lookup and
+  	refactoring facilities provided by NetBeans.
+  </dd>
+
+</dl>
+
+<!-- ========== Folk  ========== -->
+
+<hr />
+<h3><a id="folk">Folk Music</a> Related Projects</h3>
+<dl>
+<!--
+  <dt> <b>Discussion Forum</b></dt>
+  <dd>
+    Provide a web based system that will support a number of discussion
+    groups with related groups appearing in a hierarchy.  Discussion is
+    public, although users must subscribe, to be allowed to post.  Private
+    (invitation only) discussion groups should be allowed.  Users should be
+    able to create new groups.  Messages within a group should be processed
+    in a threaded form.
+  </dd>
+-->
+
+  <dt> <b>Festival Planner</b></dt>
+  <dd>
+    There are many factors involved in the planning of the festival,
+    Artists, Venus, Stewards, not to mention different types of Events.
+    This project would be to produce a tool that would allow festival
+    organisers to keep track of this information. The tool should be
+    capable of checking the integrity of the data, i.e., identify double
+    bookings, holes in the program, etc. It should be possible to download
+    the database into a Mobile Computing Device for use by the organisers,
+    during the festival itself. It may be possible to extend the idea
+    to provide web/wap access to the database.
+  </dd>
+
+  <dt> <b>MAN:</b> Mutual Advertising Network</dt>
+  <dd>
+    A non-profit company wants to set up an advertising network, which
+    allows members of the network to advertise on each others web sites.
+    This project would be to develop such a system. This would require an
+    investigation into similar systems, and requirements analysis, in
+    addition to the development of the application.
+  </dd>
+
+<!--
+  <dt> <b>MAGIC:</b> Music And Gig Information Community</dt>
+  <dd>
+    This project would be to produce a web based information service designed
+    to enable users to access information on, and support <em>live</em> music
+    in the local area. The site should allow artists and venues (including
+    pubs, clubs and halls) advertise their gigs; and fans can find out about
+    local artists and where / when they can be seen.
+  </td>
+-->
+
+  <dt> <b>Song Database</b></dt>
+  <dd>
+    In this project you are asked to fully specify, design and implement
+    a song database. The database will hold not only the song lyric but
+    the score and comments on them. It may also hold information about
+    artists and what discography information as may be supplied by the
+    artists / recording company.
+    <p>
+    The specification may include a text compression method, search
+    method and MIDI handling. For an example of a simple version of the
+    proposed system can be found on the Digital Tradition web page
+    (<a href="http://supersearch.mudcat.org/@AdvSuperSearch.cfm">http://www.mudcat.org/</a>).
+    </p>
+  </dd>
+</dl>
+
+<!-- ========== Op Sys ========== -->
+
+<hr />
+<h3><a id="opsys">Operating Systems</a> Related Projects</h3>
+<dl>
+  <dt><strong>Linux installer package</strong></dt>
+  <dd>
+  	Distributing commercial level applications for Linux is very
+  	difficult and time consuming.  As all the different variants of
+  	Linux have their own way of processing thing.  Normally, this
+  	involves developing an install script, or building a lot of
+  	different packages for the various package managers (deb, rpm,
+  	etc).
+  	<p>
+  	Where as in the Windows world, which suffers from similar problems,
+  	package builders exist, which provide the developer with the
+  	ability to provide a single file (a .exe or .msi) which will
+  	install a suitable version of the program and support files in
+  	the relevant locations for users requirements.
+  	</p><p>
+  	This project would provide such an installation builder for the
+  	Linux environment.  The program would need to process a
+  	configuration file describing the application.  It should then be
+  	capable of operating on most Linux environments
+  	(Ubuntu, Fedora, openSUSE, Debian, Mint, Mandriva, and BSD).
+  	</p><p>
+  	The install program will probably consist of a base program that
+  	can unpack the binary archive, interrogate the system and run a
+  	configuration script which has been constructed by the builder
+  	application.
+  	</p><p>
+  	The project has the potential of becoming a commercially viable
+  	product.
+  	</p>
+  </dd>
+
+<!--
+  <dt> <b>GOOSE:</b> Graphically Orientated Operating Systems Emulator</dt>
+  <dd>
+    We already have an Operating Systems emulator package, developed in a
+    highly modular style using standard C. This project would be to replace
+    the text interface to this emulator with a graphical interface. The new
+    interface will be able to show the various system-tables while the emulator
+    is in operation. It may be possible to extend the operation to allow the
+    user to cause events to occur (such as a page fault) and then single step
+    the emulator. It is intended that a user should be able to understand the
+    operation of an operating system in grater detail.
+  </dd>
+-->
+</dl>
+
+<!-- ========== Sys Admin ========== -->
+
+<hr />
+<h3><a id="sysadmin">Systems Administration</a> Related Projects</h3>
+<dl>
+  <dt> <b>Annual Dating System</b></dt>
+  <dd>
+	Develop a system of identifying annual events without reference to
+	a specific date. An example of such a non-specific date would be
+	&quot;<em>the first Friday before the first Sunday of September</em>&quot;,
+	which would be August 31<sup>th</sup> in 2001, but September
+	2<sup>nd</sup> in 2005. The project would develop a method of
+	entering and storing such a non-specific date along with a method
+	of calculating the date for a specific year.
+  </dd>
+
+  <dt> <strong>Web Graph</strong></dt>
+  <dd>
+  	When managing a web site is it frequently to know which parts of
+  	the site depend on other parts of the site, and which refer to
+  	others.  This project is to develop a tool that will scan a web
+  	page for links and dependencies (style sheets, images).  Building
+  	a list of all the resources used by a page.  By scanning all the
+  	local page referenced from the page it is possible to build a list
+  	of all the pages that use a resource.  These lists should then be
+  	rendered in the form of a graph (possibly using the dot graph
+  	generator program) to show the interconnections between resources.
+  	Such a tool would help the site maintainer in identifying problem
+  	areas within the site.
+  </dd>
+</dl>
+
+<!-- ========== Teaching ========== -->
+
+<hr />
+<h3><a id="teach">Teaching</a> Related Projects</h3>
+<dl>
+<!--
+  <dt> <b>Web based Blog Aggregator</b></dt>
+  <dd>
+	Given the increasing use of Blogs it is becoming necessary to
+ 	everybody to have access to a central location which keeps a track
+	of their favourite Blogs.  This is known as an Aggregator.  This
+	project would build a web site which would allow students to
+	collect all Blogs (RSS news fees) they subscribe to in a single
+	location. The
+	<a href="http://www.newsgator.com/Individuals/NewsGatorOnline/">NewsGator
+	Online</a> Tool is an example of just such a service.
+  </dd>
+-->
+
+<!--
+  <dt> <b>Question Editor</b></dt>
+  <dd>
+	The <a href="http://www.blackboard.com/products/as/learningsys/">Blackboard
+	Learning System</a> used by the university provides support for
+	class tests via the
+	<a href="http://www.imsglobal.org/question/qtiv2p1pd/imsqti_oviewv2p1pd.html">IMS
+	Question and Test Interoperability</a> (QTI) standard.
+	While the Blackboard system includes tools to develop questions,
+	question banks, and class tests, these tools are not very intuitive.
+	This project would be to investigate these facilities and provide
+	a desktop application which would allow staff to develop questions,
+	question banks and test for use within the Blackboard environment.
+  </dd>
+-->
+
+<!--
+  <dt> <b>PMT:</b> Projects Management Tool</dt>
+  <dd>
+    Develop a tool to assist in the management of the final year project /
+    dissertation procedure. Such a tool would be required to have three
+    different interfaces: the project student; the project supervisor; and
+    the admin team. This tool would replace the rather poor spreadsheet
+    system currently in use.
+  </dd>
+-->
+
+  <dt> <b>SLING:</b> ARM Support Tool</dt>
+  <dd>
+    This is a windows based program which animates the operation of a
+    ARM system to aid the users understanding of the system. The
+    program would have to emulate the operation of the ARM processor,
+    and provide the user with a visual representation of the data as
+    it moves around the processor - animate the different stages of
+    the instruction pipeline.
+    Initially the program need only handle the <code>MOV</code> and
+    <code>LDM</code> instructions, more can be added as the project
+    develops.
+    It is envisioned that the tool should be provided to first year
+    students to aid in there understanding of assembler.
+  </dd>
+
+<!--
+  <dt> <strong>Simul80:</strong> A visual CPU emulator</dt>
+  <dd>
+  	First year students frequently have difficulty understanding
+  	assembler.  This project would provide a windows based program
+  	which animates the operation of a simple CPU (the Simul80).
+  	The program would provide the user with a visual representation
+  	of the data as it moves around the processor.  Thus allowing the
+  	user to actually &quot;see&quot; the data as it moves around the
+  	various busses within the CPU.  The Simul80 is a very simple
+  	processor which has been designed for this purpose.
+  </dd>
+-->
+</dl>
+
+<!-- ========== Enterprise ========== -->
+
+<hr />
+<h3><a id="ent">Enterprise Computing</a> Related Projects</h3>
+<dl>
+  <dt> <b>Flexidoc:</b> Flexible Document Management</dt>
+  <dd>
+    A system that will manage the creation, standardisation, revision,
+    and deployment of semi-structured documentation. Using a single
+    data source (structured database) to generate documentation in
+    different media (Web and Paper based). This is an extension of an
+    existing project which has defined the requirements and developed
+    the database structure. This project would concentrate on coding
+    the system.
+  </dd>
+
+<!--
+  <dt> <b>XML Content Editor</b></dt>
+  <dd>
+    Develop an editor that will allow users to develop XML based
+    documents. The editor will take an existing XML template document
+    and allow the user to edit the content of the file, but not its
+    structure. There will be a corresponding structural definition
+    file, possibly in the form of a Document Type Definition file.
+    This will define which parts of the XML file can be changed and
+    provide a description of the structure of the document.
+    The ability to manage these documents in a centralised document
+    management system and / or version control would be useful but
+    are not a requirement.
+  </dd>
+-->
+
+<!--
+  <dt> <b>CV Database</b></dt>
+  <dd>
+    A web-based database system that displays a standard CV. The
+    system should allow people to update the information at will.
+    This will take over from the current Staff listing system and
+    must be easy to use and very flexible.
+  </dd>
+  <p></p>
+-->
+
+  <dt> <b>PMT:</b> Project Management Tool</dt>
+  <dd>
+    The design and production of a tool for analysing and breaking
+    down a project into work packages (a WBS) like a Structure Chart.
+    Hierarchical decomposition tool that not only allows the task to
+    be described but also indicates the who, how, when, where and how
+    much, etc. At the lowest level each activity / task could be
+    assigned to specific individuals in the team as a list of
+    <em>to do's</em>.
+  </dd>
+
+</dl>
+
+<!-- ================================================================== -->
+
+<!--
+<a href="titles.html">Return</a>
+to project titles index page.
+-->
+
+<!-- ====================================================================== -->
+<div style="clear: both;"><hr /></div>
+<div style="float: right; width: 11em; text-align: right; font-style: italic;">
+  <a href="index.html">Dr Peter Knaggs</a><br />
+  <script type="text/javascript">
+    document.write(rmail("ku.oc.scb","kjp"));
+  </script>
+</div>
+<div style="clear: both;"><hr / ></div>
+
+</body></html>
+
+<!--
+<h3>Linux installer package</h3>
+  Preparing packages for installation on Linux sucks. This project is
+  to make it easier to ship binary applications to Linux based
+  systems.
+
+  Most applications take one of two approaches:
+  1) Roll their own installer - this is technical quite difficult
+  2) Build a lot of debs and rpms and tarballs and suffer.
+
+  Most commercial developers hate Linux packaging except the the ones
+  who roll their own.  They are quietly smug, but then they rolled
+  their own because they felt they had to.  Essentially, it is viable
+  to ignore debs/rpms.
+
+  One of the "roll your own" crowd commented that none of their
+  clients care about debs/rpms, and that most purchasers of their
+  software are running Ubuntu.
+
+Assumptions
+  We don't care about Linux policy manuals. This is an installer for
+  human beings.
+
+  LIBC: libc.so.6 is available on the box on which we want to install
+  to.  If we can't get to that, most of application software won't run
+  either.
+
+  A console mode installer is better than nothing.  A GUI would be
+  nice, but not if it makes the project bigger.  We can always add a
+  GUI later.
+
+  The installation is driven by a script.  This is the way all Windows
+  installers work.
+
+  Our users will download a single file and run it to perform the
+  installation.
+
+Problems
+  You have to find out where the executable and shared libraries
+  should go.  If we are shipping a 32 bit executable, the directories
+  will be different on different 64 bit distributions.  Once you have
+  the binaries installed, you can run something if a end-stage
+  install is required.
+
+  Then you have to find out where the application files should be
+  installed. This will vary according to whether you are installing
+  for all users, the current user.
+
+  Some files, e.g. a default configuration file, may have to be
+  created and saved in a user's home directory.  A configuration
+  global to the machine may also be required. At the moment, it is
+  reasonable to assume that all configuration file are text files.
+
+Packagers
+  Packaging is performed at the end of a project.
+  The project is always late.
+
+  Packaging a project should require two files:
+  1) An installer script to perform the required actions.
+  2) A shell script to collate all the files in one directory, bundle
+  	  up the installer binary and script, compress the files to be
+  	  installed, and produce the installer.  The installer is a ZIP
+  	  of the installer, script and the compressed payload.
+
+  It's a no big deal if a separate script is run to make the
+  installation package.  What is required is that packaging can be
+  performed with minimal manual effort as part of a "one-button"
+  project build that starts with the project source code, and
+  finishes with installers distributed to issue servers and
+  websites.
+
+Implementation
+  Scripting language binary - VFX Forth
+  Packaging tools - extension to VFX Forth
+  Probe host for details and then ask questions as necessary.
+  Run installation script (maybe more questions)
+  Display README file(s)
+  Clean up any temp files,
+  e.g. the payload was unzipped into a temporary directory.
+
+Second stage
+Uninstaller
+
+Minimal GUI that depends on X only.
+This could be the Minos system that comes with VFX Forth.
+-->

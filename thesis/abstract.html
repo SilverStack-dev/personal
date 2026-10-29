@@ -1,0 +1,49 @@
+<html>
+<head><title>Peter Knaggs' Ph.D. Thesis - Abstract</title></head>
+<body>
+<h2 align=center><hr width="70%">
+Practical and Theoretical Aspects of<br>
+Forth Software Development<p>
+Peter Knaggs
+<hr width="70%">
+Abstract
+<hr></h2>
+
+This is an investigation into the use of the Forth programming environment.
+The main areas of enquiry were: interfacing Forth to other languages;
+interfacing Forth and local area networks; and the use of RISC processors
+with stack based architecture such as the NC4000 and Harris RTX series.
+<p>
+We describe how to interface Forth and C. We also provide a system with a
+multi-tasking interrupt driven interface to the IBM NetBios networking
+software and a simple, generic, method of task activation through message
+passing.
+<p>
+Many aspects of the investigation proved to be dependent on a more thorough
+theoretical underpinning for the Forth language.  The use of a typeless
+parameter stack means that a programmer must concern himself with the
+intellectual burden of managing the parameter stack.  The mismatching of
+stack elements can be the cause of subtle logic errors.  We therefore
+investigated the possibility of developing a "type algebra" that would allow
+us to develop a typed version of Forth.  This thesis includes a theory for a
+"type signature algebra" for the stack based argument passing method used by
+Forth.
+<p>
+To support the use of multi-tasking we provide a simple, but formal, theory
+of concurrent tasks based on state machines that synchronise on events.  This
+has a graphical notation for people who are not familiar with formal
+notations.
+<p>
+We also looked at how formalisms might be used to define a semantic model for
+the Forth language and how formalisms can help to define the relationship
+between Forth's stack based virtual machine and register based target
+processors.
+<p>
+<div align=center><hr>
+[ <a href="../index.html">Peter's Home page</a>
+| <a href="index.html">Table of Contents</a> ]
+<hr><strong><big>
+        C makes you think that C is the world's greatest language.<br>
+    Forth makes you think that you're the world's greatest programmer.
+</big></strong><hr></div>
+</body></html>

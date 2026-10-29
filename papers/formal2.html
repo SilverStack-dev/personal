@@ -1,0 +1,296 @@
+<html>
+<head>
+<title>Towards Formal Forth</title>
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(15);
+book[1]  = new MakeItem("Sto88", 'Stoddart, W. J.: Specification & Optimisation, in "Proc. EuroFORML Conf.", September 1988.');
+book[2]  = new MakeItem("KnS91a",'Knaggs, Peter J., and W. J. Stoddart: Formal Forth, in "Proc. Rochester Forth Conf. on Automated Instruments", pages 50-55, June 1991.');
+book[3]  = new MakeItem("Poi90", 'Poial, Jannus: The Algebraic Specification of Stack Effects for Forth Programs, in "Proc. EuroFORML Conf.", October 1990.');
+book[4]  = new MakeItem("Poi91", 'Poial, Jannus: Multiple Stack Effects of Forth Programs, in "Proc. EuroFORML Conf.", October 1991.');
+book[5]  = new MakeItem("KnS91b",'Knaggs, Peter J., and W. J. Stoddart: The Cell Type, in "Proc. Rochester Forth Conf. on Automated Instruments", pages 55-57, June 1991.');
+book[6]  = new MakeItem("StK91", 'Stoddart, W. J., and Peter J. Knaggs: Type inference in stack based languages, in "Proc. EuroFORML Conf.", October 1991.');
+book[7]  = new MakeItem("StK92", 'Stoddart, W. J., and Peter J. Knaggs: The (almost) Complete Theory of Forth Type Inference, in "Proc. EuroFORML Conf.", September 1992.');
+book[8]  = new MakeItem("Sto92", 'Stoddart, W. J.: Implementation of the Forth Type checker, in "Proc. EuroFORML Conf.", September 1992.');
+book[9]  = new MakeItem("StK93", 'Stoddart, W. J., and Peter J. Knaggs: A type signature algebra for stack based machines, in "Formal Aspects of Computing", 5(4):289-98, August 1993.');
+book[10] = new MakeItem("Spi90", 'Spivey, J. Michael: Specifying A Real-Time Kernel, in "IEEE Software", pages 21-28, September 1990.');
+book[11] = new MakeItem("Bow87", 'Bowen, Jonathan P.: "The Formal Specification of a Microprocessor Instruction Set", Technical Monograph PRG-60, Oxford University Computing Laboratory, 11 Keble Road, Oxford, UK, January 1987.');
+book[12] = new MakeItem("Kem88a",'Kemp, D. H.: "Specification of Viper1 in Z", RSRE Memorandum no. 4195, Royal Signals and Radar Establishment, Ministry of Defence, Malvern, UK, October 1988.');
+book[13] = new MakeItem("Kem88b",'Kemp, D. H.: "Specification of Viper2 in Z", RSRE Memorandum no. 4217, Royal Signals and Radar Establishment, Ministry of Defence, Malvern, UK, October 1988.');
+book[14] = new MakeItem("Mac93", 'MacKenzie, Donald: Burden of proof goes to trial, in "The Time Higher Education Supplement", March 5 1993.');
+book[15] = new MakeItem("Tho91", 'Thompson, Brain L.: "Hardware Compilation as an Alternative Computation Architecture", M.Sc. Thesis, School of Computing and Mathematics, University of Teesside, Borough Road, Middlesbrough, Cleveland, TS1 3BA, UK, August 1991.');
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+function note ( text ) {
+  alert("End Note:\n\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>Towards Formal Forth</h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+<p>Over the last couple of years several papers have been presented
+attempting to bring formal methods to Forth, or applying formal methods
+to Forth.  This paper brings together many of these ideas and suggests
+a method by which they could be integrated into a single formally
+specified and implemented Forth programming environment.</p>
+<p>Much of the theoretical work described in this paper exists in some form.
+However, the proposed integration of these theoretical ideas has not been
+investigated any further than this paper.</p>
+</blockquote>
+<p><hr><p>
+<h4>1. Introduction</h4>
+Over the last three years or so we have seen several papers attempting to
+bring the worlds of formal methods and Forth together.  Papers have
+appeared on the initial investigation into the specification of the Forth
+Integrated Development Environment (IDE)
+[<a href="javascript:ref('Sto88')">Sto88</a>,
+ <a href="javascript:ref('KnS91a')">KnS91a</a>];
+to a stack based type theory (suitable for Forth) 
+[<a href="javascript:ref('Poi90')">Poi90</a>,
+ <a href="javascript:ref('Poi91')">Poi91</a>,
+ <a href="javascript:ref('KnS91b')">KnS91b</a>,
+ <a href="javascript:ref('StK91')">StK91</a>,
+ <a href="javascript:ref('StK92')">StK92</a>,
+ <a href="javascript:ref('Sto92')">Sto92</a>,
+ <a href="javascript:ref('StK93')">StK93</a>].<p>
+Several papers have appeared in the formal methods world that relate to
+Forth, although the authors may not consider this so.  For example,
+Spivey [<a href="javascript:ref('Spi90')">Spi90</a>] describes a simple
+real-time kernel with a co-operative round-robin scheduler.  He goes on
+to describe the simple prioritised interrupt system provided by the
+kernel
+[<a href="javascript:note('It should be noted that a simple abstract model
+ similar to the one presented in [Spi90] could provide a means of standardising
+ the multi-tasking aspect of Forth. This topic was not covered by the ANSI
+ Standard due to its complexity. However, a simple abstract model that does
+ not place any restrictions on the scheduling algorithm, yet provides for the
+ majority of algorithms should be acceptable.')">1</a>].
+Indeed this is a good description of Forth's Co-operating multi-tasking
+system.  The scheduler is described in sufficiently abstract terms that most,
+if not all, current Forth schedulers would meet it requirements.<P>
+Bowen [<a href="javascript:ref('Bow87')">Bow87</a>] provides a formal description
+of the Motorola M6800 microprocessor.  The intention was to provide a basis for
+formal proof of software developed for this processor.  Bowen says "<EM>more
+complicated and modern microprocessors such as the 68000 family could be specified
+in a similar manner.  However such processors would require a larger document
+and more work in order to cover them fully.</EM>"  The Forth based processors
+(such as the F-RISC or Dolphin processors) would make a particularly good
+processor for such a specification, as it implements the Forth abstract machine
+directly in silicon.<P>
+<H4><em>1.1. Type Checking</em></H4>
+There are currently two teams developing formal type checking systems for
+Forth, one at the <EM>University of Tartu</EM> and the other at the <EM>University of
+Teesside</EM>.  Although these teams are working in the same area, and communicate
+with each other, they are approaching the problem in two very different ways.<P>
+Jannus P&ouml;ial's paper [<a href="javascript:ref('Poi90')">Poi90</a>] was the
+first to show a formal typing system for Forth.  Although the work was still
+incomplete it sparked off an interest at Teesside leading to our paper
+[<a href="javascript:ref('StK91')">StK91</a>].  After continued work by both teams
+we have developed two very different typing algebras.  The most recent description
+of which can be found in [<a href="javascript:ref('StK93')">StK93</a>].<p>
+At Teesside we have implemented a version of the type algebra in SML
+[<a href="javascript:ref('Sto92')">Sto92</a>], and are working on extending Mitch
+Bradley's SunForth to include type checking, without detracting from the Forth's
+flexibility.  Using type checking we are able to identify programming errors at
+compile time, rather than having to track down spurious run time errors.<P>
+The ANSI Standard's concentration on portability has introduced many new
+data types (and pointers).  This matches well with the idea of checking
+for the abuse of such types.<P>
+<H4><em>1.2. Formal Basis</em></H4>
+At Teesside, we investigated the idea of providing a formal basis for the
+specification of the Forth IDE.  Our initial thoughts where presented
+in [<a href="javascript:ref('Sto88')">Sto88</a>] and later in a more complete
+form in [<a href="javascript:ref('KnS91a')">KnS91a</a>].<P>
+Even with this formal basis it was not possible to conduct proofs due to the
+lake of stack typing [<a href="javascript:note('In would be possible, however
+ the specification would have to be at such a low level of abstraction that it
+ would be too time consuming for sufficiently little result.')">2</a>].
+It was at this point our investigations were suspended.  When P&ouml;ial published
+his work on a type theory suitable for stack based languages
+[<a href="javascript:ref('Poi90')">Poi90</a>] he presented us with a method for
+overcoming the this problem.<P>
+Although we have since concentrated our efforts into developing our own type
+algebra, we now feel that it should be possible to generate a formal basis
+for Forth.  The idea being that one would take a specification, and refine it
+into a Forth implementation.  Using the formal base it should be possible to
+prove that the implementation has the same properties as the original
+specification, and is therefore a true implementation of that specification.<P>
+<H4><em>1.3. Formal Methods</em></H4>
+The Formal Methods world has been looking for a way to develop embedded
+software that can be proven to work.  York Software Engineering and the
+Defence Research Agency (DRA) [<a href="javascript:note('York Software
+ Engineering is an offshoot of the University of York. The Defence Research
+ Agency was previously known as the Royal Signals and Radar Establishment
+ (RSRE) at Malvern.')">3</a>] have recently released a system known as SPARK,
+a method for deriving correct ADA programs from Z specifications.<P>
+The Open Systems Federation (OSF) and the DRA are currently attempting to
+develop an ADA `producer' for their ANDF intermediate language technology.
+This compiler is being specified using the RSL formal notation.  The idea
+being that one could use the RAISE method to derive an ADA implementation of
+a formal specification and prove that it holds the same properties as the
+original specification.<P>
+<H4>2. Proposal</H4>
+In this section we present a project in which the whole Forth community could
+take a part.  This is a large project and could take a long time to come to
+fruition.  There may be several research projects in the idea presented here.<P>
+<H4><em>2.1. Outline</em></H4>
+The project is to develop a formal Forth IDE similar to the OSF/DRA ADA
+system.  This would allow one to specify a problem.  And using a
+known method (such as RAISE) derive a Forth program that can be proven to
+be a correct implementation of that specification.<P>
+This would start with a formal specification of a stack processor, probably
+an existing one, or better yet one still in the design stage.  Having
+developed this specification, it should be possible to develop a full ANSI
+standard Forth system for it, complete with a formal programming model.<P>
+The idea is to provide the formal support for embedded applications.  One
+could develop a formal specification of an application.  This specification could
+then be refined, using the formal model, into a Forth program.  As the
+Forth system is formally defined we can prove that the resultant program
+is a true implementation of the original specification.<P>
+This project could be achieved in the following way:
+<OL>
+<LI> Develop a formal model of a simple embedded micro-controller.
+<LI> Develop a model for a simple ANSI Standard Forth IDE.  This environment
+	should be formally specified and proven to be complete, consistent and
+	compliant with the ANSI Standard.
+<LI> The Forth IDE should be implemented, and proven to meet with its specification.
+</OL>
+<H4><em>2.2. Argument</em></H4>
+Although attempts have been made at specifying hardware before (re Viper),
+in this project we propose using an existing (or forthcoming) embedded
+micro-controller.  The reasoning behind this, is that the technology already
+exists, and we are interested in how to best use this technology.<P>
+The flexibility of Forth makes a formal model slightly more difficult than
+for other languages, however, the underlying abstract machine is particularly
+well suited for formal specification.  With the addition of the type algebra
+we feel that this is now possible.  Such a formal IDE underpinned by a specified
+micro-controller would make it possible to prove that the full system is a
+true implementation of the original specification.<P>
+This is about as far as we can go before having to specify and prove hardware!
+The failure of the Viper project [<a href="javascript:ref('Kem88a')">Kem88a</a>,
+<a href="javascript:ref('Kem88b')">Kem88b</a>] shows this to be a difficult, if
+not impossible, task.  However given some of the new hardware compilation
+techniques being developed by the Programming Research Group at the University
+of Oxford this may become easier in the future
+[<a href="javascript:ref('Tho91')">Tho91</a>].<p>
+<H4>3. Summary</H4>
+Over the last couple of years papers have appeared on specification of the Forth
+IDE; to stack based type-theories.  We have looked at some of this work, and
+some of the work coming from the Formal methods/Safety critical systems people.
+This was found to be not only applicable to Forth, but to have a similar intent.<P>
+We looked briefly at Spivey's description of a simple Forth-like real-time kernel
+complete with a co-operative round-robin scheduler, and at Bowen's specification
+of the Motorola 6800.  This proves that not only is the Forth abstract machine
+well suited for formal specification, but it would be of interest to Formal
+methods/Safety critical practitioners.  As there are Forth engines that implement
+the abstract machine directly in silicon we could take such a specification all
+the way down to the processor's instruction set (and possible even further).<P>
+We went on to present a project that would bring the different ideas together.
+The project is outlined by means of a proposal that we (the Forth community) develop
+a formal Forth IDE such that one can use a formal model to derive a Forth
+implementation of a specification.  It should be possible (using the formal model)
+to prove that the Forth implementation holds the same attributes as the original
+application's specification, and is therefore a true implementation of that
+specification.<P>
+Providing a complete embedded programming environment would make Forth a more
+attractive target language.  As the IDE has been developed to a standard and has
+been proven, one need only concentrate on the problem at hand and not on the
+underlying environment as is currently the case.<P>
+<H4>4. References</H4>
+<dl>
+<dt> [Bow87]
+<dd> Bowen, Jonathan P.: <i>The Formal Specification of a Microprocessor Instruction Set</i>,
+	Technical Monograph PRG-60, Oxford University Computing Laboratory, 11 Keble Road,
+	Oxford, UK, January 1987.<P>
+<dt> [Kem88a]
+<dd> Kemp, D. H.: <i>Specification of Viper1 in Z</i>, RSRE Memorandum no. 4195, 
+	Royal Signals and Radar Establishment, Ministry of Defence, Malvern, UK,
+	October 1988.<P>
+<dt> [Kem88b]
+<dd> Kemp, D. H.: <i>Specification of Viper2 in Z</i>, RSRE Memorandum no. 4217,
+	Royal Signals and Radar Establishment, Ministry of Defence, Malvern, UK,
+	October 1988.<P>
+<dt> [KnS91a]
+<dd> Knaggs, Peter J., and W. J. Stoddart: Formal Forth, in <i>Proc. Rochester Forth Conf. on Automated
+	Instruments</i>, pages 50-55, June 1991.<P>
+<dt> [KnS91b]
+<dd> Knaggs, Peter J. and W. J. Stoddart: The Cell Type, in <i>Proc. Rochester Forth Conf. on Automated
+	Instruments</i>, pages 55-57, June 1991.<P>
+<dt> [Mac93]
+<dd> MacKenzie, Donald: Burden of proof goes to trial, in <i>The Time Higher Education Supplement</i>,
+	March 5, 1993.<P>
+<dt> [Poi90]
+<dd> P&ouml;ial, Jannus: The Algebraic Specification of Stack Effects for Forth Programs,
+	in <i>Proc. EuroFORML Conf.</i>, October 1990.<P>
+<dt> [Poi91]
+<dd> P&ouml;ial, Jannus: Multiple Stack Effects of Forth Programs, in <i>Proc. EuroFORML Conf.</i>,
+	October 1991.<P>
+<dt> [Spi90]
+<dd> Spivey, J. Michael: Specifying A Real-Time Kernel, in <i>IEEE Software</i>, pages 21-28,
+	September 1990.<P>
+<dt> [StK91]
+<dd> Stoddart, W. J. and Peter J. Knaggs: Type inference in stack based languages, in
+	<i>Proc. EuroFORML Conf.</i>, October 1991.<P>
+<dt> [StK92]
+<dd> Stoddart, W. J. and Peter J. Knaggs: The (almost) Complete Theory of Forth Type Inference,
+	in <i>Proc. EuroFORML Conf.</i>, September 1992.<P>
+<dt> [StK93]
+<dd> Stoddart, W. J. and Peter J. Knaggs: A type signature algebra for stack based machines,
+	in <i>Formal Aspects of Computing</i>, 5(4):289-98, August 1993.<P>
+<dt> [Sto88]
+<dd> Stoddart, W. J.: Specification &AMP; Optimisation, in <i>Proc. EuroFORML Conf.</i>, September 1988.<P>
+<dt> [Sto92]
+<dd> Stoddart, W. J.: Implementation of the Forth Type checker, in <i>Proc. EuroFORML Conf.</i>,
+	September 1992.<P>
+<dt> [Tho91]
+<dd> Thompson, Brain L.: <i>Hardware Compilation as an Alternative Computation Architecture</i>,
+	M.Sc. Thesis, School of Computing and Mathematics, University of Teesside,
+	Borough Road, Middlesbrough, Cleveland, TS1 3BA, UK, August 1991.<P>
+</dl>
+<H4>End Notes:</H4>
+<ol>
+<li> It should be noted that a simple abstract model similar to the one presented
+	in [<a href="javascript:ref('Spi90')">Spi90</a>] could provide a means of
+	standardising the multi-tasking aspect of Forth.  This topic was not covered
+	by the ANSI Standard due to its complexity.  However, a simple abstract model
+	that does not place any restrictions on the scheduling algorithm, yet provides
+	for the majority of algorithms should be acceptable.<P>
+<li> In would be possible, however the specification would have to be at such a
+	low level of abstraction that it would be too time consuming for sufficiently
+	little result.<P>
+<li> York Software Engineering is an offshoot of the University of York.  The
+	Defence Research Agency was previously known as the Royal Signals and Radar
+	Establishment (RSRE) at Malvern.<P>
+</ol>
+</body></html>

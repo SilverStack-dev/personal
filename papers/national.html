@@ -1,0 +1,447 @@
+<html>
+<head>
+   <TITLE>A truly International Standard by Peter Knaggs</TITLE>
+   <META NAME="Author" CONTENT="Peter Knaggs">
+   <STYLE>body { text-align: justify }</STYLE>
+</head>
+<body>
+<h2 align=center>A truly International Standard</h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@bcs.org.uk">pjk@bcs.org.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+When ANS Forth was developed a number of issues where unaddressed. The ability
+to provide multilingual programs being one of them. This is understandable, as
+they where developing an <em>American</em> Standard.  When this standard was
+accepted by the ISO as an international standard they have asked the ANS Forth
+committee to address the issues of international programming.
+</blockquote>
+<p><hr><p>
+<a name="background">
+<H4>1. Background</H4>
+</a>
+When the American National Standards (ANS) X3/J14 committee where considering
+the ANS Forth standard (X3.215-1994) they took a very &quot;open&quot;
+attitude to this. When the final document was accepted in 1994 it was probably
+the most openly discussed standard to date, and most defiantly the most openly
+discussed Forth standard. There are a number of areas the committee did not
+address itself to, one of these being '<em>internationalisation</em>'. The
+committee did receive at least one proposal on this matter, but correctly
+decided that they where dealing with an American standard and thus need not
+open this particular can of worms.
+<p>
+In 1997 the International Organisation for Standardisation (ISO) and
+International Electrotechnical Commission (IEC) accepted ANS Forth as an
+&quot;International Standard&quot; (ISO/IEC 15145:1997(E)). When accepting the
+standard the British Standards Institute (BSI) made comments concerning the
+lack of internationalisation and has asked the X3/J14 technical committee (TC)
+to address this issue when it reconvenes in 1998.  To quote from the
+&quot;Disposition of Comments Report&quot; (<cite>International Organization
+for Standardization 1997</cite>):
+<p>
+<blockquote>
+	<h4 align=center>
+		Disposition of Comments Report<br>
+		ISO/IEC DIS 15145 - Programming Language Forth
+	</h4>
+	The editorial comments from the Netherlands and the ISO Central
+	Secretariat have been incorporated in the revised DIS.
+	<p>
+	The comments from the United Kingdom concerning Internationalization
+	issues and requirements for embedded systems programmed in Forth will
+	be addressed when the TC reconvenes in 1998.  At that time, we will
+	consider these and other needs that have arisen in this evolving
+	technology.
+</blockquote>
+This paper looks at some of the issues that will need to be addressed in the
+forthcoming TC meeting. A topic of interest to the European Forth community
+(<cite>Borrell 1990; Nelson 1995; Nelson and Shermer 1996</cite>).
+<a name="issues">
+<H4>2. Issues</H4>
+</a>
+There are in essence four areas of regional variance.
+<H4><em>2.1. Date Format</em></H4>
+There are two separate date formats the need to be specified, the 'short' and
+'long' formats.  There are three areas of difference for the 'short' date
+format:
+<ol>
+<li> The <em>date separator</em> - the character that is used to separate the
+	day, month and year fields.
+<li> The order of the day, month and year fields.
+<li> The size of the three fields.  For the day and month fields we need to
+	know if the leading zero should be displayed.  For the year field it
+	is necessary to know if the century should be displayed or not.
+</ol>
+Some countries prefer the month to be displayed as a three letter abbreviation
+rather than a number.  This option has not been catered for in the above
+description.
+<p>
+In the 'long' format the names of the day and month (in both abbreviated and
+full form) may be displayed, and are thus subject to language differences.
+There are five additional formatting considerations:
+<ol>
+<li> Whether the day of month is displayed, if so then whether it is shown
+	with or without a leading zero.
+<li> Whether the day of week is shown, if so then in abbreviated or full form.
+<li> Whether the month is shown as a number (with or without leading zero),
+	in abbreviated or full form.
+<li> Whether the year is shown in full (with century) or abbreviated (without
+	century) form.
+<li> The order of the fields (day of week, day of month, month and year)
+	including any separating text, such as commas or spaces.
+</ol>
+<H4><em>2.2. Time Format</em></H4>
+The time format is the least complex of all the variants to be considered.
+In many ways it is similar to the short date format.  There are only five
+formatting considerations to be taken into account.
+<ol>
+<li> The <em>time separator</em> - the character that is used to separate the
+	hour, minute and seconds fields.
+<li> The order of the hour, minute and seconds fields.
+<li> Whether the time is displayed as 24- or 12-hour clock.
+<li> The pre- and post- meridian indicators.
+<li> When using the 12-hour clock, whether the meridian indicator is before
+	or after the time.
+</ol>
+Technically we should allow for the hour, minute and seconds fields to be
+displayed with or without a leading zero, however no county (to the authors
+knowledge) allows the minute and seconds fields to be displayed without a
+leading zero.  The hours field is normally dependent on the method of display,
+that is to say in the 12-hour clock the leading zero is not displayed, while
+in the 24-hour clock it is.
+<H4><em>2.3. Number Format</em></H4>
+There are a surprising number of formatting considerations that need to be
+taken into account when displaying a number.  First let us consider the
+unsigned integer:
+<ol>
+<li> The <em>group separator</em> - the character that is used to separate
+	large numbers into smaller groups for ease of reading.
+<li> The size of the groupings.
+</ol>
+Whilst is has become traditional in the computing world to display large
+numbers without thought of formatting, it is traditional in the non-computing
+world to group large numbers into smaller groupings in order to ease reading.
+For example, in the UK it is traditional to provide groupings of three digits
+separated by a comma:
+<p>
+<div align=center>
+<table>
+<tr align=right><td>Computing Display:</td>		<td>4294967295<br></td></tr>
+<tr align=right><td>UK Non-computing Display:</td>	<td>4,294,967,295<br></td></tr>
+</table>
+</div>
+<p>
+For smaller numbers this is not an issue (numbers &lt;10000). For larger
+numbers it becomes important that the user (not necessarily computer literate)
+can interpret the number correctly at a glance, thus the grouping becomes an
+issue.
+<p>
+Let us now turn to the signed integer, in addition to the considerations for
+the unsigned integer, there are:
+<ol>
+<li> The positive and negative sign symbols.
+<li> Whether the sign symbol is displayed before or after the number.
+<li> Whether there is a space between the sign symbol and the number.
+<li> Whether the positive symbols is displayed for positive numbers.
+</ol>
+Note that some countries allow negative numbers to be displayed in parentheses
+(i.e., &quot;(<i>n</i>)&quot;). This option is not accounted for in the above
+description.
+<p>
+Moving on to floating point numbers, the following considerations are added to
+those for a signed integer:
+<ol>
+<li> The <em>decimal separator</em>.
+<li> Whether a leading zero should be displayed for numbers less than 1 or
+	not.
+</ol>
+This makes the assumption that the least number of significant digits are
+shown in the fractional part of the number. Indeed if the fractional part is
+zero then it not shown at all. I.e., that &quot;1.50&quot; is displayed as
+&quot;1.5&quot; and that &quot;1.0&quot; is displayed as &quot;1&quot;.  This
+assumption may be overcome by specifying a minimum number of decimal places.
+<p>
+Thus the set of considerations necessary to correctly display a (signed
+floating point) number are:
+<ol>
+<li> The <em>group separator</em>.
+<li> The size of the groupings.
+<li> The positive and negative sign symbols.
+<li> Whether the sign symbol is displayed before or after the number.
+<li> Whether there is a space between the sign symbol and the number.
+<li> Whether the positive symbols is displayed for positive numbers.
+<li> The <em>decimal separator</em>.
+<li> Whether a leading zero should be displayed for numbers less than 1 or
+	not.
+<li> No of decimal places (<em>optional</em>).
+</ol>
+Note that in the UK the group and decimal separators are the comma and decimal
+point respectively.  In many European countries these are reversed.
+<H4><em>2.4. Currency Format</em></H4>
+Most if not all currency systems (currently known to the author) are now based
+on the decimal system, thus the currency format automatically inherits the
+nine formatting considerations for floating point numbers in addition to
+having its own considerations:
+<ol>
+<li> The <em>Currency Symbol</em>.
+<li> Whether the currency symbol is displayed before or after the value.
+<li> Whether there is a space between the currency symbol and the value.
+<li> Whether the sign appears before or after the currency symbol.
+</ol>
+Some countries allow negative currency values to be displayed in parentheses
+(I.e., &quot;(&pound;<i>n</i>)&quot;), this option is not accounted for in
+this description.
+<p>
+Given these thirteen formatting considerations (one could even add a
+&quot;negatives in parentheses&quot; option, making it fourteen
+considerations) it should be possible to display any decimal based currency in
+the format of the target country.
+<a name="address">
+<H4>3. Addressing the Issues</H4>
+</a>
+A quick survey of existing systems show two fundamental methods of addressing
+these issues.  In Unix/Posix (<cite>Sun Microsystems, Inc. 1994</cite>) the
+<code>environ</code> function returns a data structure which holds the setting
+for each configuration option for a given country. The number of configuration
+options provided for are more limited than those outline in section 2. In
+Windows ('95 and NT) (<cite>Microsoft 1995</cite>) and OS/2 (<cite>IBM
+1994</cite>) a set of special display routines are provided to display the
+date/time/number/currency in the required format.  These routines take all of
+the identified considerations into account when displaying the object.
+<p>
+In this section a method of addressing these issues is presented which lies
+between these two extremes.
+<p>
+There are a number of ways the interface could be implemented.  One could
+define the display words as deferred words, resolving to the actual display
+routine once the location has been selected. The display words could access a
+jump table to access the correct display routine for the given country code.
+One could define the words to operate based on an internal data structure,
+somewhat like the Unix system, changing the values in the data structure when
+the country location is set. Alternatively, one could extend the
+<code>ENVIRONMENT?</code> table to include the fourteen considerations, and
+define the display words to operate off this table.
+<p>
+The two table methods have the advantage of allowing for &quot;user
+defined&quot; environment, that may not have been taken into account in the
+pre-configured country settings. Provided that the configuration options
+(formatting considerations) are accessible to the user/programmer.
+<H4><em>3.1. Setting Location</em></H4>
+A &quot;country indicator&quot; is used to identify the country concerned.
+This can be either a country code (such as <code>44</code> for the UK) or a
+language string (&quot;<code>en-GB</code>&quot; for &quot;English [UK]&quot;).
+The language string is more flexible, and allows for Dutch speaking Belgium
+(<code>nl-BE</code>) and French speaking Belgium (<code>fr-BE</code>).
+However, it may not be as specific as the numerical codes.  Both the country
+code and the language string systems are supported by ISO standards.
+<p>
+A word is also provided to extract the current country setting in order to
+allow the application to provide user messages in the appropriate language.
+(See Borrell (1990) or Nelson (1995) for comments on multilingual
+programming.)
+<dl>
+<dt><code>SET-COUNTRY</code> ( country - )
+<dd>This will take a country indicator and set the display words to display
+	their object in the default format required for the indicated country.
+<p>
+<dt><code>GET-COUNTRY</code> ( - country )
+<dd>Will return the country indicator the system is currently using.
+</dl>
+<a name="datetime">
+<H4><em>3.2. Date/Time Format</em></H4>
+</a>
+A number of new words are defined to take a parameter (the date or time) and
+display this in a country specific manner.  The parameter may be a day, month,
+year or a hour, minute, second set or a Julian date/time value.
+<p>
+Using a Julian date/time value will allow the system to produce a single value
+to indicate the date/time of any item.  The date/time display words would
+interpret this value for display using the current country settings.  However,
+a number of additional Julian value handling words would need to be
+introduced.
+<p>
+Alternatively, using the day, month, year or the hour, minute, second sets
+will allow direct interfacing to the current <code>TIME&amp;DATE</code> word.
+Thus the sequence:
+<p align=center>
+<code>TIME&amp;DATE .DATE SPACE .TIME</code>
+</P>
+will display the current date/time in the format required by the current
+country setting.
+<dl>
+<dt><code>.DATE</code> ( day month year - ) or ( Julian - )
+<dd>This can be defined to take either a Julian date/time value or a day,
+month, year set and display the date in the current 'short' date format.
+<p>
+<dt><code>.FULLDATE</code> ( day month year - ) or ( Julian - )
+<dd>Like <code>.DATE</code> this can be defined to take either a Julian
+date/time value or a day, month, year set and will display the given date in
+the current 'long' date format.
+<p>
+<dt><code>.TIME</code> ( hour minute second - ) or ( Julian - )
+<dd>Take a hour, minute, second set or a Julian date/time value and display
+the given time using the current format.
+</dl>
+<H4><em>3.3. Number Format</em></H4>
+Either the current numeric display words (<code>.</code>, <code>.R</code>,
+<code>U.</code>, <code>U.R</code>, <code>D.</code>, <code>D.R</code>,
+<code>F.</code>) should be modified to display the number according to the
+format options or, a more viable alternative would be to, define a number of
+new words to display numbers in a country specific manner:
+<dl>
+<dt><code>.NUM</code> ( <i>n</i> - )
+<dd>Display the signed integer <i>n</i> in a country specific manner.
+<p>
+<dt><code>.RIGHT</code> ( <i>n<sub>1</sub></i> <i>n<sub>2</sub></i> - )
+<dd>Display the signed integer <i>n<sub>1</sub></i> in a country specific
+manner, right aligned in a field <i>n<sub>2</sub></i> characters wide.
+<p>
+<dt><code>U.NUM</code> ( <i>u</i> - )
+<dd>Display the unsigned integer <i>u</i> in a country specific manner.
+<p>
+<dt><code>U.RIGHT</code> ( <i>u</i> <i>n</i> - )
+<dd>Display the unsigned integer <i>u</i> in a country specific manner, right
+aligned in a field <i>n</i> characters wide.
+<p>
+<dt><code>D.NUM</code> ( <i>d</i> - )
+<dd>Display the signed double number <i>d</i> in a country specific manner.
+<p>
+<dt><code>D.RIGHT</code> ( <i>d</i> <i>n</i> - )
+<dd>Display the signed double number <i>d</i> in a country specific manner,
+right aligned in a field <i>n</i> characters wide.
+<p>
+<dt><code>.FLOAT</code> ( <i>F:</i> <i>r</i> - ) or ( <i>r</i> - )
+<dd>Display the floating point number <i>r</i> in a country specific manner.
+</dl>
+Note that in all cases the number is automatically displayed in decimal no
+matter the value of <code>BASE</code>.  The <code>BASE</code> variable is not
+effected by any of these words.
+<p>
+Where a number is to be right aligned, if the number of characters required to
+display the number is greater than the number of characters provided then all
+digits of the number are displayed with no leading spaces in a field as wide
+as necessary.
+<H4><em>3.4. Currency Format</em></H4>
+In an attempt to provide a single method of handling all currencies, the
+currency value should be <em>an integer value treated as a fixed point number
+with the least significant digit representing the smallest currency unit</em>.
+I.e., 1 indicates 1 pence, while 100 represents &pound;1 (100 pence).
+<p>
+With this definition in mind we have the following word definitions:
+<dl>
+<dt><code>$.</code> ( <i>n</i> - )
+<dd>Display the signed number <i>n</i> as a fixed point currency value in a
+country specific manner.
+<p>
+<dt><code>$.RIGHT</code> ( <i>n<sub>1</sub></i> <i>n<sub>2</sub></i> - )
+<dd>Display the signed number <i>n<sub>1</sub></i> as a fixed point currency
+value in a country specific manner, right aligned in a field
+<i>n<sub>2</sub></i> characters wide.
+<p>
+<dt><code>D$.</code> ( <i>d</i> - )
+<dd>Display the signed double number <i>d</i> as a fixed point currency value
+in a country specific manner.
+<p>
+<dt><code>D$.RIGHT</code> ( <i>d</i> <i>n</i> - )
+<dd>Display the signed double number <i>d</i> as a fixed point currency value
+in a country specific manner, right aligned in a field <i>n</i> characters
+wide.
+<p>
+<dt><code>F$.</code> ( <i>F:</i> <i>r</i> - ) or ( <i>r</i> - )
+<dd>Display the floating point number <i>r</i> as a currency value in a country
+specific manner.
+<p>
+<dt><code>F$.RIGHT</code> ( <i>n</i> - ) ( <i>F:</i> <i>r</i> - )
+	or ( <i>r</i> <i>n</i> - )
+<dd>Display the floating point number <i>r</i> as a currency value in a country
+specific manner, right aligned in a field <i>n</i> characters wide.
+</dl>
+<H4>4. Summary</H4>
+Section 1 provides an introduction to the problem of internationalisation and
+the Forth standard's position relating international or multilingual
+programming.  Section 2 identifies some twenty seven formatting considerations
+required to support the provision of multilingual application. These relate to
+the display of the date, time, numbers, and currency.
+<p>
+Section 3 presents a method of addressing the issues identified in the previous
+section.  There are a number of points of interest raised in this section.
+<ol>
+<li> There are a number of different methods available to implement the
+	interface outlined in section 3, however, the preferred method is the
+	use of a table of the formatting options.  The table can be loaded with
+	pre-defined defaults for a set of known countries.  However, if the
+	table is available to the user, it would be possible to define
+	additional environments that are not catered for in the pre-defined
+	setting.
+<p>
+<li> A country code is required to identify a set of pre-defined values. This
+	may be either a country code (<code>44</code> for the UK) or a
+	language/region string (&quot;<code>en-GB</code>&quot; for &quot;English
+	[UK]&quot;).  Both methods are supported by ISO definitions.  It is not
+	known which is more specific.
+<p>
+<li> The concept of using a Julian date/time value to indicate a date/time is
+	assumed in section 3.2. This would allow a system to provide a single
+	value to indicate the date/time and provides a flexible method of
+	handling date/time that is totally system independent.
+	<p>
+	It should be noted that the introduction of a Julian date/time value
+	will require a the definition of a number of additional Julian value
+	handling words.
+	<p>
+	Section 3.2 provide an alternative definition of the date/time display
+	words based on the current system without the Julian value facility.
+<p>
+<li> Currency is defined to be represented as a fixed point integer value,
+	with the least significant value representing the smallest unit of
+	currency.  Two words are defined to convert an integer value into the
+	currency display required for the given country.
+	<p>
+	A currency display word is also defined which takes a floating point
+	number and displays this as a currency in the format required by the
+	current country setting.  This allows floating point numbers to be used
+	as an alternative to the fixed point integer representation.
+</ol>
+<h4>References</h4>
+<dl>
+<dt>Borrell, R. (1990, September).
+<dd>Deferred Language Translation.
+	In <em>euroFORML'90 Conference Proceedings</em>, MPE Ltd, 133 Hill Lane,
+	Southampton SO1 5AF UK. Forth Interest Group.
+<p>
+<dt>IBM (1994).
+<dd><em>User's Guide to OS/2 Warp</em>.
+	International Business Machines Corporation.
+<p>
+<dt>ISO (1997).
+<dd>Disposition of Comments Report:
+	ISO/IEC DIS 15145 - Programming Language Forth.
+	<code>comp.lang.forth</code>.
+<p>
+<dt>Microsoft (1995).
+<dd><em>On-Line Manuals</em>. Microsoft.
+<p>
+<dt>Nelson, N. J. (1995, October).
+<dd>Internationalization of Windows applications using Forth.
+	In <em>euroForth '95 Conference Proceedings</em>,
+	DELTA-t, Adenauerallee 54, D-20097 Hamburg, GERMANY.
+	Forth Interest Group.
+<p>
+<dt>Nelson, N. J. and K. Shermer (1996, October).
+<dd>Far eastern Forth.
+	In <em>euroForth '96 Conference Proceedings</em>,
+	DELTA-t, Adenauerallee 54, D-20097 Hamburg, GERMANY.
+	Forth Interest Group.
+<p>
+<dt>Sun Microsystems, Inc. (1994).
+<dd><em>On-Line Manuals</em>.
+	Sun Microsystems, Inc.
+</dl>
+</body>
+</html>

@@ -1,0 +1,47 @@
+.timetable {
+	border-collapse: collapse;
+	empty-cells: show;
+	border: 1px solid black;
+}
+
+.timetable thead td,
+.timetable th {
+	text-align: left;
+	vertical-align: top;
+	border: 1px solid black;
+	padding: 4px;
+}
+
+.timetable .time {
+	width: 10%;
+}
+
+.timetable .slot {
+	width: 100%;
+	vertical-align: top;
+}
+
+.timetable td {
+	border: 1px dashed black;
+}
+
+.timetable td.type {
+	border: none;
+	font-weight: bold;
+	background: #CCCCCC;
+}
+
+.timetable td.name {
+	border: none;
+	font-weight: bold;
+}
+
+.timetable td.room {
+	border: none;
+}
+
+.timetable td.week {
+	border: none;
+	font-size: x-small;
+}
+

@@ -1,0 +1,466 @@
+<html>
+<head>
+<title>TkForth</title>
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(10);
+book[1] = new MakeItem("Boy96", 'Boyce, R.M.: "TkForth: An interface to the Tk toolkit for ProForth for Windows", Dissertation, University of Paisley, 1996.');
+book[2] = new MakeItem("MPE96", 'MicroProcessor Engineering Ltd: "ProForth for Windows reference manual", 1996.');
+book[3] = new MakeItem("Ous89", 'Ousterhout, J. K.: "Tcl: an embeddable command language", 1989.');
+book[4] = new MakeItem("Ous90", 'Ousterhout, J. K.: "An X11 toolkit based on the Tcl language", 1990.');
+book[5] = new MakeItem("Ous94a",'Ousterhout, J. K.: "Writing Tk based applications in C", 1994.');
+book[6] = new MakeItem("Ous94b",'Ousterhout, J. K.: "Building user interfaces with Tcl and Tk", 1994.');
+book[7] = new MakeItem("Ous94c",'Ousterhout, J. K.: "Tcl/Tk Engineering Manual", 1994.');
+book[8] = new MakeItem("Ous94d",'Ousterhout, J. K.: "An overview of Tcl and Tk", 1994.');
+book[9] = new MakeItem("Sto89", 'Stoddart, W. J.: "Forth++ Course Notes (part I—III)", University of Teesside, 1989.');
+book[10]= new MakeItem("Wel95", 'Welch, B.: "Practical programming in TCL and TK", 1995.');
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>TkForth<br>
+An interface to the Tk toolkit for ProForth for Windows</h2>
+<h3 align=center>Robert M. Boyce and Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+This paper was written and compiled by Robert M. Boyce and Dr Peter J. Knaggs based
+upon a project undertaken as part of an honours degree at the University of Paisley
+[<a href="javascript:ref('Boy96')">Boy96</a>].  The Tk toolkit is a freeware user
+interface widget toolkit based upon the Tcl scripting language developed by Dr John
+K. Ousterhout.  Originally developed under the X11 windows system, the Tk toolkit
+has recently been ported to the 32 bit Microsoft Windows platform.  In this paper we
+look at an interface between this port of Tcl/Tk and MPE's ProForth for Windows.  The
+interface was to be designed in such a way that a Forth programmer could utilise the
+Tk toolkit to build user interfaces to Forth programs, in place of the cumbersome and
+difficult to learn win32 API (Application Programmer Interface) currently provided by
+ProForth for Windows.
+</blockquote>
+<p><hr><p>
+<h4>1. Tcl/Tk Background</h4>
+Tcl (Tool command language, pronounced tickle) provides the application programmer with
+a powerful yet elegant scripting language.  It was designed to be easily incorporated
+into applications based on the C programming language, although interfaces for other
+languages, such as Ada, now exist. 
+<p> 
+With the development of the Tk toolkit, a powerful Motif like widget set based upon the
+Tcl scripting language, a new role emerged for Tcl. When combined with Tk, Tcl provides
+the application developer and indeed the end user with a simple, powerful Graphical User
+Interface (GUI) designer.  The nature of Tcl/Tk allows the GUI to be built dynamically,
+and also allows for the end product to have several user definable interfaces.  The
+parsing of an external script file at run time to determine the look and feel of the
+interface being the most common use.  This has many applications, eg, multi-lingual
+applications and different interfaces for novice and expert users.  Tcl/Tk also allows
+a series of small applications to be tied together to make one super application, with
+Tk providing an interface between these applications.  A typical example is a word
+processor, composed of separate text editor, spell checkers, grammar checker etc. with
+the end user being provided with a common, user-configurable, interface.  If the user
+frequently uses a sequence of commands he could bind all these commands to a
+button/keypress/mouse click which he himself defined in the interface script.
+<p>
+Recently Tcl and Tk have been ported to other operating systems and environments, from
+the original incarnation on a UNIX X-Windows environment.  These other systems include
+Macintosh's system 7 and Microsoft's Windows (32 bit versions only).
+<h4>2. Tcl, an Overview</h4>
+Tcl is an embeddable scripting language, which has much in common with most other
+scripting languages in that it is founded upon the principle that in an ideal world we
+would have one universal scripting language which controls all aspects of an application.
+Scripting languages in general increase the speed with which applications are developed
+as they raise the level at which the application is developed.  In the current climate
+of interactive applications, a command language is typically employed to control the
+high level functions, and to give the user a degree of  flexibility in the way they use
+the application.  Scripting languages tend to be targeted to specific application areas.
+<p>
+A possible solution to this is a universal scripting language. In the case of Tcl the
+language interpreter is provided as a C library, as C is by far the most common development
+language in use at this time. This scripting language would provide basic programming
+constructs such as variables and procedures.  A key point, however, is that the scripting
+language must be easily extensible.  Tcl was designed to be used with a two language
+approach to application development. Where the scripting language would provide the high
+level control procedures and a conventional language such as C would provide the
+functionality.  This is desirable because a scripting language cannot achieve the
+performance of conventional languages.  Conventional languages however are not as easy to
+program as scripting languages nor are they easily interchangeable.  Figure 1 shows the
+basic structure of a common Tcl application.
+<p align=center>
+<img src="fig1.gif"><br>
+<b>Figure 1:</b> Structure of Tcl Applications [<a href="javascript:ref('Ous94d')">Ous94d</a>]
+</p>
+<h4>3. Tk, an Overview</h4>
+The Tk toolkit is a Motif-like widget toolkit based upon the Tcl scripting language.  Tk
+has a simple syntax. For example, the command:
+<blockquote>
+  <code>button .hello -text " Hello World"</code>
+</blockquote>
+creates a button called <code>.hello</code> with the text Hello World on its face (Figure 2).
+This is clearly an improvement over the standard Win32 API provided by ProForth, which is
+complex and requires a great deal of specialist knowledge on the part of the programmer.  For
+example, the command:
+<blockquote>
+  <code>10 10 100 20 BS_PUSHBUTTON  Z" Hello World" "BUTTON" CONTROL</code>
+</blockquote>
+creates a similar button to the above Tk code, in actual fact due to the myriad of defaults
+supplied to the Tk button, it is more pleasing to the eye.
+<p align=center>
+<img src="fig2.gif"><br>
+<b>Figure 2:</b> Tk button widget example
+</p>
+Tk provides a programmable widget set composed of the following widgets:
+<blockquote>
+  button, checkbutton, radiobutton, menubutton, menu, canvas, label, entry, 
+  message, listbox, text, scrollbar, scale, frame, toplevel
+</blockquote>
+Like most widget toolkits Tk uses geometry managers to control the display of its widgets.
+Geometry managers are a set of algorithms which control the display of on screen objects.
+The main Tk geometry manager is the packer and it is used as follows:
+<blockquote>
+  <code>pack </code>&lt;<i>widget list</i>&gt; &lt;<i>options</i>&gt;
+</blockquote>
+It is important to note that the widgets are not displayed until managed by a geometry manager.
+Geometry managers also have parameters which alter their function, such as padding, stack order,
+and anchoring.  For a more detailed description of geometry managers see
+[<a href="javascript:ref('Wel95')">Wel95</a>].
+<p>
+As with all windowing systems Tk requires an event loop to process commands, the event loop for
+Tk is called <code>Tk_Mainloop</code>, and is provided in the Tk41 Dynamic Link Library (DLL).
+It is possible however to process all existing events by flushing the event queue with
+<code>TclWinFlushEvents</code>, it is this function that is used to allow TkForth to build GUI's
+interactively.
+<p>
+Given the programmability, power and the elegance of the ProForth system it would provide a powerful
+Windows development tool if the complexity of developing the GUI could be overcome.  Given the ease
+with which Tk Applications can be developed, and it's interactive nature, it would seem like an ideal
+solution to providing the ProForth programmer with an ability to develop complex interfaces quickly.
+<h4>4. System Design</h4>
+The TkForth interface was designed to mimic as much as possible the standard Tcl and C interface,
+as developed by Ousterhout.  The system was developed in order to facilitate two main models of use.
+These two models would both allow the Forth programmer to develop Windows based software without
+the need to learn the complex and varied syntax of the Windows 32 API. Also the developer  requires
+only a minimal understanding of windows programming as most of the work is done by Tk and not by the
+developer as is usual in conventional Windows 32 API programming. As part of this project we have
+developed a simple, consistent, easy to learn syntax developed for this project, with only minimal
+changes from the Tcl syntax.  Another important aspect of the Tk toolkit is the ease with which
+applications can communicate with each other. This would allow an application written in TkForth to
+communicate with an application written in C or Ada or any other language, providing it also
+contained a Tcl interpreter.
+<p>
+Unlike most current widget toolkits, neither model is object-oriented as Tk is not strongly
+object-oriented.  The widget structure may present a superficial resemblance to object-oriented
+methods but there is no official class structure and no inheritance amongst widget types
+[<a href="javascript:ref('Ous90')">Ous90</a>].  This was a conscious decision by the developers
+of Tk.
+<h4><em>4.1. Model 1</em></h4>
+The first model of use is based on the original model proposed by Ousterhout (Figure 1).  Allowing
+the Forth programmer to write the main body of his application in Forth, with the interface written
+as a Tcl script, which can be evaluated at run-time by the application. This allows the end-user to
+customise the application with only a rudimentary knowledge of  Tcl/Tk  as opposed to the specialist
+knowledge and skill  required to program exclusively in Forth. This model works by first writing the
+functionality of the system in Forth. The words which are to called from Tcl are then defined as
+callbacks and the addresses are passed to the Tcl Interpreter.  The interface and high level
+functionality is then controlled by an external Tcl file which uses these callbacks as Tcl commands.
+This requires the Tcl file to be evaluated by the application after the Forth callbacks are implemented.
+This model is not as readily debugged interactively, as it would be necessary to write procedures to
+generate Tcl scripts on the fly.  This is however not  difficult task.
+[<a href="javascript:ref('Wel95')">We95</a>] gives a number of such scripts.
+<h4><em>4.2. Model 2</em></h4>
+The second model is aimed at the Forth programmer who wishes to code exclusively in Forth. The
+interface is simple and easy to use, and works on a need-to-know basis. The developer is only
+required to learn a small subset of the toolkit in order to produce fairly complex results. To
+create a button, for example, the developer uses the <code>:button</code> word, followed by the
+name of the button and then a list of optional parameters.  These parameters can be used  in any
+order, and indeed it not necessary to include any of them at all, as there are defaults for all.
+<p>
+Example:
+<blockquote>
+<pre>
+:button Hello
+  text&gt;" hello World"
+  callback&gt;  cb-greeting
+;
+</pre>
+</blockquote>
+This creates a Tk button with the text "Hello World" on the face. The Forth word <code>cb-greeting</code>
+is bound to this button through a callback structure. The Forth word <code>greeting</code> must be defined
+before the <code>callback&gt;</code> parameter is supplied to the button. The Forth programmer can then
+use the <code>Hello</code> word to refer to the button. The parameters supplied at creation can be
+altered through the use of the <code>configure</code> command, as follows:
+<blockquote>
+<code>Hello configure text&gt;" Hello Universe" ;</code>
+</blockquote>
+The callback word is created from a common word through the use of the <code>&gt;callback</code>
+word <code>(</code> <i>word-address</i>  &lt;<i>Forth_Name</i>&gt; &lt;Tcl_Name&gt; <code>-- )</code>,
+as follows:
+<blockquote>
+<code>' greeting &gt;callback cb-greeting Tcl-greeting</code>
+</blockquote>
+Given the predefined word greeting.
+<p>
+The <code>configure</code> command can also be followed by any number of optional parameters, providing
+the widget in question supports that parameter.  It was decided that this model should be interactive.
+Thus allowing the developer to build/modify the application from the ProForth debug window.
+<p>  
+This model works by building Tcl command strings in a buffer from the ProForth commands entered at the
+terminal (or from a file) and passing these strings for Tcl to evaluate.  This string is then passed to
+Tcl for evaluation.  This was an important design decision and was taken mainly for the following reasons:
+<ul>
+<li>	Tcl/Tk is still under development, and therefore it's internal workings are evolving.
+	New releases are intended to be compatible at the Tcl level, thus incompatibilities should be minimal.
+<p>
+<li>	There is no documentation (excepting source code comments) available about the internal workings
+	of the Tcl and Tk DLLs at this time.
+<p>
+<li>	The performance shortfall would not be that crucial due to the nature of the tasks to be performed.
+	ie. mainly user interface design.
+<p>
+<li>	Strings are the only data structure supported by Tcl. Indeed Ousterhout specifically chose strings
+	to allow data and commands to be interchangeable [<a href="javascript:ref('Ous89')">Ous89</a>].
+</ul>
+<h4><em>4.3. Using the callback System</em></h4>
+The callback system is used by first defining the Forth word to be executed upon the callback.  A callback
+word is then defined using <code>&gt;callback</code> which also defines a Tcl function to invoke the
+callback.  A convention of using a <code>cb-</code> prefix for callback words and a <code>Tcl-</code> prefix
+for Tcl callback functions has been adopted.  The callback function is passed as a parameter to a widget,
+via the <code>callback&gt;</code> option.  Callbacks may be defined on creation of the widget or later
+through the <code>configure</code> command.  The callback system has been defined in this manner in order
+to ensure that it is possible to call the original word from inside other Forth words, if the word were
+to be defined with a special definer, this would not be possible.
+<p>
+In the following example, a <code>greeting</code> word is defined, a callback word is defined
+(<code>cb-greeting</code>) to execute this word.  A Tcl function (<code>Tcl-greeting</code>) to invoke the
+callback is also defined.  Finally a button widget is defined (<code>Hello</code>) which displays the text
+&quot;Hello World&quot; on the button and executes the Tcl function <code>Tcl-greeting </code> when pressed.
+This function invokes the <code>cb-greeting</code> callback, which executes the greeting word in turn.
+<blockquote>
+<pre>
+: greeting
+  .&quot; Hello World&quot;
+;
+' greeting &gt;callback cb-greeting Tcl-greeting
+:button Hello 
+  text&gt;&quot; Hello World&quot;
+  callback&gt; Tcl-greeting
+;
+</pre>
+</blockquote>
+<h4><em>4.4. Variable Passing</em></h4>
+It is necessary for GUI systems to pass variable values from the controls to
+the functions in the main program. TkForth is no exception.  Variable passing
+is achieved through the use of the <code>Tcl_GetVar</code> and <code>Tcl_SetVar</code>
+functions.  Ousterhout recommends this method
+[<a href="javascript:ref('Ous94c')">Ous94c</a>]
+as the arguments are passed as strings, thus allowing Tcl to maintain it's own
+internal variable space.
+<p>
+Three new Forth words were defined to implement variable passing <code>TkVar</code>,
+<code>Tk@</code>, and <code>Tk!</code>.  These words were designed to be externally
+similar to the predefined Forth words <code>Variable</code>, <code>@</code> and
+<code>!</code>.  It is important to note however that these variables are stored as
+zero terminated strings, and they must be formatted as such before a <code>Tk!</code>
+or formatted into the desired form after a <code>Tk@</code>.
+<h4>5. Implementation</h4>
+<h4><em>5.1. Implementation of widget creation commands</em></h4>
+The widget creation commands were to be created by a Forth definer defining word.
+This technique has the following benefits:
+<ul>
+<li> It allows a set of words which all exhibit the same behaviour to be defined
+	from one point.
+<p>
+<li> Any changes to the actions of these words can be made to the master defining word.
+<p>
+<li> Excessive repetition of definition is removed.
+</ul>
+The Widget creation word is called tk-make-object and is used as follows:
+<blockquote>
+<code>&quot;&quot; button .&quot; tk-make-object :button</code>
+</blockquote>
+The <code>&quot;&quot; button .&quot;</code> is the tk representation of the command
+to create a new button, whereas the <code>:button</code> word is the Forth command to
+create a new button. The <code>:button</code> word is then used as follows:
+<blockquote>
+  <code>:button hello</code>
+</blockquote>
+This creates a Forth word <code>hello</code> which is used to refer to the button.
+This word effectively places a &quot;<code>.hello</code>&quot; string in the
+<code>tcl-text</code> buffer which is passed to Tcl to evaluate commands.  Other widget
+defining words can be defined in the same way, such as:
+<blockquote>
+  <code>&quot;&quot; label .&quot; tk-make-object label:</code>
+</blockquote>
+<h4><em>5.2. Implementation of widget configuration options</em></h4>
+Five classes of widget configuration options were identified, these were implemented
+using defining words, which allowed the functions of these to be altered centrally.
+The five classes identified were:
+<ol>
+<li> <i>absolute</i> option - single word options such as <code>10</code>, <code>grey80</code> etc.<p>
+<li> <i>quote</i> option - primarily used for text such as &quot;Hello World&quot;<p>
+<li> <i>strip-quote</i> option - used to group together parameters at the Forth level,
+	which will be interpreted by Tcl as being a single argument.<p>
+<li> <i>path</i> option - used to pass widget paths, such as <code>.hello</code>.
+	This is required as the TkForth does not require a preceding &quot;<code>.</code>&quot;
+	in widget paths whereas this is necessary for Tk.<p>
+<li> <i>command</i> option - used when a widget command pair is required as an argument,
+	this is primarily used for the scroll commands.
+</ol>
+The defining words used are of the following format:
+<blockquote><code>tk-make-absolute-option</code></blockquote> 
+And are used as follows:
+<blockquote>
+<code>&quot;&quot; -activebackground&quot; tk-make-absolute-option activebackground&gt;</code>
+</blockquote>
+The <code>activebackground&gt;</code> word is then used in conjunction with a widget defining
+word or a widget command word (see next section) to set the active background colour. 
+<p>
+Example:
+<blockquote>
+<pre>
+:label MyLabel
+  activebackground&gt; grey80
+;
+</pre>
+</blockquote>
+creates a label widget with <code>grey80</code> as its background colour when active.
+<p>
+Quote options (defined using <code>tk-make-quote-option</code>) are used as follows:
+<blockquote><code>text&gt;&quot; Hello&quot;</code></blockquote>
+With everything between the quotes being passed as one argument to Tk inside quotes.
+The strip quote options are used in a similar manner but the arguments are passed
+without the quotes.  Command options are used as follows:
+<blockquote><code>xscrollcommand&gt; f.scroll set</code></blockquote>
+where <code>f.scroll</code> is a widget and <code>set</code> is the name of the widget
+command.  The other configuration options are used in a similar manner.
+<h4><em>5.3. Implementation of widget command options</em></h4>
+Widget commands are required to invoke some of the special features of the widget
+toolkit.  The scrollbars providing a good example.  One common command is the
+<code>configure</code> command which allows the programmer to alter a configuration
+option after the widget has been created.  Widget commands are defined in TkForth
+using a definer word, <code>Tk-make-command</code>.  This is used to create new words
+which place their Tk equivalent in the <code>tcl-text</code> buffer.  For example:
+<blockquote><code>&quot;&quot; configure&quot; tk-make-command configure</code></blockquote>
+creates the Forth word <code>configure</code> which places the text
+&quot;<code> configure </code>&quot; in the <code>tcl-text</code> buffer.  The reason
+why the <code>tk-make-command</code> definer word has the above format and not merely
+<code>tk-make-command configure</code>, generating the Tcl string on the fly, is that
+some of the Forth words are not the letter for letter identical to the Tcl equivalent,
+some of the Forth commands translate into more than one Tcl command.  This was decided
+upon to simplify the TkForth programmers learning curve, and maintain some consistency
+of interface.  Also it is possible with the above word to alter the Tcl command with
+subsequent releases, should the syntax be changed while allowing TkForth programs to
+run with no modification, thus introducing an element of future proofing.
+<h4><em>5.4. Sending the command string to Tcl</em></h4>
+The above commands are used to generate a string in a buffer to allow the Forth programmer
+to send commands to the Tcl Interpreter.  The correct formatting is done by the above words,
+but is still necessary to send the string to Tcl for evaluation.  This is done by overloading
+the <code>;</code> (semicolon) word.  This word is used in a similar manner to the standard
+word.  It is used to finish definitions of Tk widgets, and also at the end of packer commands.
+The new <code>;</code> is defined as part of the Tk vocabulary, this vocabulary is invoked
+when a reference to a Tk widget or a geometry manager is made.  The next <code>;</code> is
+then judged to be a command to send the <code>tcl-text</code> buffer to Tcl for evaluation,
+it then restores the current vocabulary to the standard.
+<h4><em>5.5. A shortcut for Tcl and Forth practitioners</em></h4>
+If the Forth user has some experience with Tcl/Tk a method for sending Tcl commands directly
+to the Tcl interpreter has been provided. This is done by the use of the <code>tk`</code> word
+and is used as such:
+<blockquote><code>Tk` button .hello -text &quot Hello World&quot; `</code></blockquote>
+This allows hand optimisation of the code, by the multilingual Tcl/Forth developer.
+Alternatively Tcl command strings can be passed directly to the interpreter through the use of
+the <code>Tcl_Eval</code> function.
+<blockquote>
+<code>&quot;&quot; set tk_strictMotif 1 &quot; $&gt;asciiz rel&gt;abs tcl-evaluate</code>
+</blockquote>
+<h4>6. Examples</h4>
+ProForth for Windows comes with a number of example files demonstrating the methods employed
+to program the windows interface using the 32 bit API provided by ProForth. Figure 4 illustrates
+one of these examples, while Figure 3 illustrates the TkForth equivalent. This example was chosen
+to highlight various TkForth features
+<ul>
+<li> variable passing
+<li> callbacks
+<li> widget creation
+<li> geometry management
+</ul>
+As can be seen from Figures 3 and 4, the TkControls are, by default, more aesthetically pleasing
+than the standard API controls.
+<p>
+<div align=center>
+<table>
+<tr>
+  <td align=center valign=top><img src="fig3.gif"></td>
+  <td width=10></td>
+  <td align=center valign=top><img src="fig4.gif"></td>
+</tr>
+<tr>
+  <td><b>Figure 3:</b> TkControls Example</td>
+  <td></td>
+  <td><b>Figure 4:</b> ProForth API Controls Example</td>
+</tr>
+</table>
+</div>
+<p>
+The ProForth 32-Bit API requires 98 lines of complex API calls to provide the above example.
+TkForth achieves similar functionality with only 52 lines. Coding the above example in C and
+providing a Tcl script file requires around 150 lines of source code (note that blank lines
+and comments are not included in these counts). This reduction in the size of the source code
+is made all the more remarkable when one considers the performance of the TkForth system. While
+not as efficient as the raw API calls, TkForth appears to perform admirably alongside the Tk/C
+method.  This slight loss of performance when compared to raw API calls is minimal and is
+forgivable when one considers the reduced complexity and specialist knowledge required.
+<h4>7. Summary</h4>
+The project goal was to produce an interface to the Tk toolkit for ProForth for Windows.  This
+task was achieved through study of both the systems and determining the aspects of both which
+would remain in the TkForth interface. The two models of use provide the Forth developer with
+differing options regarding the manner with which the Tk toolkit is utilised.  The Forth purist
+will prefer the Forth only model.  Practitioners familiar with the power of Tcl scripts however
+can incorporate quite complex user interfaces written in Tk into their applications.
+<h4>8. References</h4>
+<dl compact>
+<dt> [Boy96]
+<dd> Boyce, R.M.: <em>TkForth: An interface to the Tk toolkit for ProForth for Windows</em>, Dissertation,
+	University of Paisley, 1996.<p>
+<dt> [MPE96]
+<dd> MicroProcessor Engineering Ltd: <em>ProForth for Windows reference manual</em>, 1996.<p>
+<dt> [Ous89]
+<dd> Ousterhout, J. K.: <em>Tcl: an embeddable command language</em>, 1989.<p>
+<dt> [Ous90]
+<dd> Ousterhout, J. K.: <em>An X11 toolkit based on the Tcl language</em>, 1990.<p>
+<dt> [Ous94a]
+<dd> Ousterhout, J. K.: <em>Writing Tk based applications in C</em>, 1994.<p>
+<dt> [Ous94b]
+<dd> Ousterhout, J. K.: <em>Building user interfaces with Tcl and Tk</em>, 1994.<p>
+<dt> [Ous94c]
+<dd> Ousterhout, J. K.: <em>Tcl/Tk Engineering Manual</em>, 1994.<p>
+<dt> [Ous94d]
+<dd> Ousterhout, J. K.: <em>An overview of Tcl and Tk</em>, 1994.<p>
+<dt> [Sto89]
+<dd> Stoddart, W. J.: <em>Forth++ Course Notes (part I—III)</em>, University of Teesside, 1989.<p>
+<dt> [Wel95]
+<dd> Welch, B.: <em>Practical programming in TCL and TK</em>, 1995.<p>
+</dl>
+</body></html>

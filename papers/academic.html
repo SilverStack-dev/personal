@@ -1,0 +1,394 @@
+<html>
+<head>
+<title>A Look at Forth's Academic Standing</title>
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(8);
+book[1] = new MakeItem("ANS93", 'American National Standards Institute, Inc., "American National Standard for Information Systems --- Programming Languages --- Forth", June 1993, Standard X3.215-199x, X3J14 dpANS-6.');
+book[2] = new MakeItem("Bra92", 'Bradley, Mitch: Open Boot firmware, in "Proc. of the Winter 1992 USENIX Conf.", pages 223-35, January 1992.');
+book[3] = new MakeItem("Bro82", 'Brodie, Leo: "Starting Forth" (second edition), Prentice Hall International, 1982.');
+book[4] = new MakeItem("Bro84", 'Brodie, Leo: "Thinking Forth", Prentice Hall International, 1984, Withdrawn from catalog.');
+book[5] = new MakeItem("Bro90", 'Brothers, Kent M.: The Forth System Behind VP-Planner: Designing for Efficiency in the face of Complexity, in "Proc. Rochester Forth Conf. on Embedded Systems", pages 5-12, June 1990.');
+book[6] = new MakeItem("Dav92", 'Davies, Graeme: "The 1992 Research Assessment Exercise", a Circular Letter by Graeme Davies, Universities Funding Council, October 1991.');
+book[7] = new MakeItem("Moo74", 'Moore, Charles H.: Forth: A new way to program a mini-computer, in "Astronomy & Astrophysics Supplement", 15:497-511, 1974.');
+book[8] = new MakeItem("OSF91", 'Open Software Foundataion, "ANDF, Application Portability, and Open Systems: A White Paper", technical report O-ANDF-WP17-1, June 1991.');
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>A Look at Forth's Academic Standing</h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+In this paper we look at the problems affecting the academic acceptance of
+Forth.  We take stock of its current standing, and the perceived current
+prejudices.<P>
+In the current era of accountability, academics find it difficult to justify
+being involved in, or even interested in Forth.  We make two suggestions as
+to how this may rectified.<P>
+As Forth gains more general acceptance it is seen that some form of control
+over the standard of Forth programmers will be required.  The idea of a
+controlling body is outlined.<P>
+The intention of this paper is to <EM>provoke discussion</EM> within the
+community about the problems outlined.
+</blockquote>
+<p><hr><p>
+<h4>1. The Past</h4>
+Forth has suffered from the attitude that it is a &quot;hackers&quot; language.  In
+certain circles this has proved to be an advantage, however, it has slowed
+the academic acceptance of Forth considerable.  The main reason for people
+holding this attitude relates back to the early days when EFIG/FIG released
+their portable public domain system.  Software houses/managers took one look
+at this hoch-potch of ideas and pre-standard code before either becoming
+engrossed in the idea or dropping it like a hot brick.  Now when we talk of
+Forth, this is what they remember.  We are well aware that Forth has move on
+greatly since those days.  A simple look at the new ANSI Standard
+[<a href="javascript:ref('ANS93')">ANS93</a>] shows this quite clearly.  Yet
+the software managers still have this pre-'78 idea of Forth!<P>
+This must be changed if Forth is to gain any standing as a language.
+Fortunately this has indeed been happening, but only by stealth.  Ie., Hiding
+Forth inside other products such as VP-Planer [<a href="javascript:ref('Bro90')">Bro90</a>],
+the Open Boot ROM [<a href="javascript:ref('Bra92')">Bra92</a>], and similar projects.<P>
+Many people still regard Forth as a &quot;write only&quot; language.  This mainly comes
+from the constraints of the Block (or Screen) and perceived lack of comments.
+However, the block system probably encourages more structure and documentation
+than other so called normal (imperative) languages.  The average manager does
+not see the shadow (or comment) block, this is not helped by some programmers,
+not supplying comment blocks!<P>
+Chapter 11 of the ANSI Standard outlines a file interface that should totally
+overcome this outdated criticism.  Unfortunately the move to file base systems
+will bring with it the bad habits found with these other languages.  Ie., The
+code will start to become less documented, with people relying on the file
+layout.  The file structure will encourage larger, less generalised code
+fragmentation.  For examples of bad fragmentation and limited documentation,
+just look at any file based compiler (such as C, Pascal or ADA).<P>
+Software managers tend to see only the (mostly badly documented) code.  They
+do not appreciate that Forth is not just another programming language, but
+rather a philosophy of programming [<a href="javascript:ref('Bro84')">Bro84</a>].  Many ideas
+currently in favour (such as structured programming, reusability, libraries,
+etc.) generally known as &quot;<EM>Software Engineering</EM>&quot; have been available
+and used in Forth for many years [<a href="javascript:ref('Bro82')">Bro82</a>,
+<a href="javascript:ref('Bro84')">Bro84</a>].<P>
+Because of its involvement with the distribution of public domain Forth
+systems in the '70s, the Forth Interest Group has been permanently associated
+with the early &quot;hackers&quot; attitude to Forth.  FIG now has the status of a
+simple user group.  The idea of releasing a common base into the public domain
+was a very ambitious one, and before its time.  As the electronic distribution
+and discussion of the ANSI Standard was breaking new ground.  FIG was one of
+the leaders in this kind of marketing, unfortunately it failed to keep peoples
+interest, or come out with new packages.  Thus aided its own destruction by
+promoting the general feeling that Forth has not progresses since FIG-Forth.
+Fortunately both the Forth community, and others, have learned the lessens of
+this disaster.  This form of marketing is being used with grate success by
+other organisations, such as the Free Software Foundation (FSF).<P>
+<h4>2. The Present</h4>
+Forth is slowly gaining some respectability.  Now that we finally have an ANSI
+Standard, it will go a long way to improving Forth's standing in many
+manager's eyes.  The &quot;portability&quot; aspect of the standard should not be
+ignored.  This is one area where Forth has been lacking.  The standard not
+only addresses this problem but actively encourages the development of
+portable programs!<P>
+As previously stated, there are many projects using Forth in the underling
+architecture.  However, the companies involved do not wish their involvement
+with Forth to become public knowledge.  There are generally two reasons for
+this: (a) they consider this to be commercially sensitive information; or (b)
+their software managers think they will be criticised and belittled for making
+what was, apparently, an intelligent production decision.<P>
+Many Forth-like development languages have been developed by different
+organisations.  The Ten15 Development Language (TDL) being the most important
+of these.  This has now been adopted as the &quot;Architecture Neutral Distribution
+Format&quot; (ANDF) development target language for the Open Systems Foundation
+(OSF) [<a href="javascript:ref('OSF91')">OSF91</a>].  Although the basic ideas and principals of
+the ANDF system are very close to those of Forth [<a href="javascript:ref('Moo74')">Moo74</a>],
+it is implemented at a higher level.  It is receiving large funding grants for
+research.<P>
+<h4>3. Academic Requirements</h4>
+With the push for more accountability in education academics are increasingly
+being pushed to produce more refereed papers in both Journals and Conferences
+[<a href="javascript:ref('Dav92')">Dav92</a>].  This &quot;Publish or Perish&quot; attitude means that if
+we are wanting academics to take an interest in Forth, we are going to have
+to provide some mechanism for justifying time spent looking into Forth related
+issues.<P>
+<H4><em>3.1. The Current Situation</em></H4>
+At current there are <B>no</B> Forth related conferences.  The current so
+called conferences are all <EM>workshops</EM> from the academic viewpoint.
+The academic (or perhaps more accurately the Research Assessment) definitions
+are:
+<DL>
+<DT><B>Workshop:</B>
+<DD>
+	A meeting where practitioners of a technology meet to discuss current
+	issues, projects, research, and advances with the technology. 
+	The papers presented at a workshop are current up to date discussion
+	of the technology.  Workshops are not normally refereed, with papers
+	being completed (on occasions) on the day of the workshop.  For 
+	examples of workshops refer to the Springer-Verlag Workshop Series.
+<P>
+<DT><B>Conference:</B>
+<DD>
+	A Conference is a meeting of practitioners and researchers to
+	interchange opinions, discuss current issues and research in the 
+	technology.  The papers at a conference have all be refereed, and
+	are published (in a conference proceedings) before the conference.  
+</DL>
+<H4><em>3.2. Current Conferences</em></H4>
+The following is a list of the current Forth conferences:
+<DL>
+<DT><B>FORML:</B> (Forth Modification Laboratory)
+<DD>
+	By its very title this is a &quot;Laboratory&quot;, or a Workshop.  The
+	material presented most defiantly falls into the Workshop
+	category.  This is a meeting of practitioners discussing technical
+	aspects of current projects.  Proposed extensions to the technology,
+	etc.  The presentations are not refereed and very often
+	opinion, with little or no supporting argument.
+<P>
+<DT><B>EuroFORML:</B> (European Forth Modification Laboratory)
+<DD>
+	This is a European version of the FORML conference, the
+	same comments hold.  It is a Workshop with presentations
+	on current projects, technical extensions, and opinions are
+	given.
+<P>
+<DT><B>EuroFORTH:</B> (European Forth conference)
+<DD>
+	For various reasons some vendors involved in EuroFORML,
+	wanted to change its name to be more meaningful, thus the EuroFORTH
+	conference was formed.  Unfortunately this is still the EuroFORML
+	at hart, and is really a Workshop.<P>
+	This move does, however, show promise.  It may be possible to convert
+	the EuroFORML workshop into a fully refereed EuroFORTH conference (see
+	section <A HREF="#Future:Confs">4.1</A>).
+<P>
+<DT><B>Rochester Forth Conference:</B>
+<DD>
+	While this calms to be a conference, it is not.  Papers are reviewed
+	before acceptances, however the papers are not truly refereed.  The
+	full proceedings are not available for some time after the conference.
+	Rather than a conference this is indeed a Workshop.<P>
+	As with EuroFORTH this could be converted into a formal conference.
+	Being organised by the Institute of Applied Forth Research
+	(publisher of the only refereed Journal) this should prove to be
+	a very simple operation, involving little additional organisation.
+<P>
+<DT><B>Forth Language Workshop:</B>
+<DD>
+	This is a workshop held by the ACM Special Interest Group on Forth
+	as part of the larger ACM Computer Science Conference (in conjunction
+	with the ACM Computer Science Education Conference, and the ACM
+	Symposium on Applied Computing).  It currently enjoys sufficient
+	support that an independent workshop is no envisaged.
+</DL>
+<H4><em>3.3. Current Journals</em></H4>
+Now we look at the current Forth related publications:
+<DL>
+<DT><B>Journal of Forth Application and Research:</B>
+<DD>
+	This is a formally refereed Journal, published by the Institute of
+	Applied Forth Research.  The journal carries papers on all aspects
+	of the language.  Technical issue of current projects, reports on
+	current research, etc.<P>
+	This Journal seams to be going through a lethargic stage.  I submitted
+	a paper in 1990 and have yet to receive any form of acknowledgement. In
+	addition to this, the last issue of the Journal to be published was
+	Volume 6, Issue 2, in 1990.<P>
+	If we are wanting to encourage people to write papers of academic
+	standing this is simply intolerable.
+<P>
+<DT><B>Soviet Journal of Forth Application and Research:</B>
+<DD>
+	The, now defunct, soviet version of the Journal of Forth
+	Application and Research.  It carried translations of papers
+	appearing in the Journal, and some original (refereed) papers of
+	its own.<P>
+	One edition was published, although some additional &quot;electronic
+	editions&quot; where published, this also appears to have come to an
+	end.
+<P>
+<DT><B>SIG-Forth:</B>
+<DD>
+	The ACM SIG-Forth Newsletter, publishes unrefereed articles and
+	letters.  Although generally of good quality the material is not
+	refereed.
+<P>
+<DT><B>Forth Dimensions:</B>
+<DD>
+	A publication of the Forth Interest Group.  Articles may be
+	reviewed, and edited, but are certainly not refereed.  As with the
+	SIG-Forth Newsletter, the quality of the material is generally
+	good, however, publication in such an organ is of no academic credit.
+<P>
+<DT><B>Others:</B>
+<DD>
+	Several other magazines and journals will publish the occasional
+	article on Forth.  Dr. Dobbs Journal, Byte, Embedded Systems
+	Programming, Midnight Engineering, etc.  However, these are magazines
+	that take interesting articles.  The articles published by such
+	magazines may be of interest, but do not carry any academic credit.
+</DL>
+<h4>4. The Future</h4>
+These are comments, recommendations, suggestions as to how we may be able to
+make Forth more attractive to academics, or at least provide a means of
+justification for academic interest in Forth.
+<A NAME="Future:Confs">
+<H4><em>4.1. Conferences</em></H4>
+</A>
+I feel that the Rochester Forth Conference should be converted into a true
+conference.  That is to say, an organising committee receiving papers for
+review.  As this conference is currently organised by the Institute for
+Applied Forth Research, it should not be too difficult to arrange a full
+program committee/referees, etc.<P>
+The EuroFORML workshop, should be called EuroFORTH.  This is less confusing
+for people outside the community and makes it easier to justify attendance
+than the `Forth Modification Laboratory'.  I also recommend that the
+EuroFORML be converted into a full refereed conference.  Thus using a new
+name for a new style of meeting.<P>
+It is not my aim to change the style or manner of the meetings, simply to
+make them more academically acceptable.  I suggest the EuroFORML conference be
+made into a formal conference, complete with conference (program) committee,
+refereed papers etc.  Having said that papers must be refereed and effectively
+published before appearance at the conference, there is nothing stopping the
+conference chairman/committee from having an official &quot;Workshop&quot;,
+&quot;Tutorial&quot;, and/or &quot;Plenary&quot; sessions.<P>
+<H4><em>4.2. Journals</em></H4>
+We should be well served in this department, however, the &quot;Journal of Forth
+Application and Research&quot; has not published since 1990.  The Journal being
+published by the Institute for Applied Forth Research could be seen as
+somewhat incestuous.  For a Journal to be acceptable it should be
+published by an independent publisher.  This would mean that the publisher
+sees sufficient interest (or sales) to back a Journal.  A Journal being
+published by the community it serves is generally disregarded as a
+&quot;crack-pot&quot; journal of no academic standing.<P>
+Could we start a European Forth Journal?  If possible we should approach
+a known publisher with this idea rather than taking it on ourselves.  
+Possible suggestions would be Springer-Verlag, John Wiley &AMP; Sons,
+North-Holland, McGraw Hill...  Perhaps it may be possible to obtain
+monies from the EEC to support such an effort?<P>
+To start such a Journal an `editor in chief' is required, besides a full set
+of people prepared to referee papers.  Presently I feel that the community can
+only really support one Journal, however, the current status of the Journal
+of Forth Application and Research is sufficiently vague that I feel a new
+(possibly European) Journal may be required.<P>
+<h4>5. And Beyond...</h4>
+It is envisaged that when Forth does become more accepted we must dispel
+the &quot;hackers&quot; myth from the Forth Interest Group.  We propose a new
+membership based organisation to monitor and control the professional'
+Forth programmers.  An outline for such an organisation may be:
+<OL>
+<LI> It will be supported by membership subscriptions (and possibly
+	corporate subscriptions).<P>
+<LI> It would confer `Student', `Associate', `Member', and `Fellow' status
+	on its members.  Thus allowing an employer to gage the standing of a
+        Forth programmer, by his membership status.<P>
+<LI> Would validate taught courses.  Possibly leading to direct acceptance
+        at `Associate' or `Member' level.<P>
+<LI> May be charged with the organisation of the formal conferences.
+	(EuroFORTH?)<P>
+<LI> May publish a Forth Journal.
+</OL>
+Precisely how such an organisation should operate is another matter.  There
+are currently a few suggestions:
+<OL>
+<LI>	It should be set up as a totally new organisation.  With a name
+	such as the &quot;<EM>Institute of Forth Programmers</EM>&quot;.  Precisely how the
+	initial capital would be raised is another question.<P>
+	This has an inherent drawback.  The institute will have no academic
+	standing.  Indeed it probably would be seen as a new name for the
+	Forth Interest Group.  This we are trying to avoid.  It will also
+	duplicating efforts of both the Forth Interest Group, and the
+	Institute for Applied Forth Research.<P>
+<LI>	It should be set up under the guidance of the British Computer
+	Society (BCS).<P>
+<LI>	It should be set up as a subgroup of the Institute for Electrical
+	Engineers (IEE).<P>
+	Both suggestions mean a Special Interest Group.
+	Membership to such an organisation may be a requirement before
+	membership of the SIG.  Perhaps the ACM SIG could be reformed into
+	this new organisation?<P>
+<LI>	A Special Interest Group as a joint-subgroup between the BCS and
+	the IEE.
+</OL>
+Investigation of this matter has not extended beyond the speculation stage.
+We now await comment, suggestions, and support on this idea.<P>
+<h4>6. Summary</h4>
+In this paper we have attempted to look at the problems affecting the
+general acceptance of Forth.  In particular we have investigated its 
+academic standing.  We have taken stock of its current standing, and the 
+perceived current prejudices.<P>
+In the current era of accountability (the &quot;publish or perish&quot; temperament)
+academics can no longer justify being involved in, or even interested in,
+Forth.  We must provide a basis for such justification.  Two main
+suggestions where put forward:
+<OL>
+<LI>	We have at least one refereed conference.  This will be a
+	redevelopment of an existing `workshop'.  The Rochester Forth
+	Conference and the EuroFORTH Conference where suggested.<P>
+<LI>	We have at least one independent refereed Journal.  This will have
+	to fight in the marketplace with the existing Forth Journals.
+</OL>
+As Forth gains more general acceptance it is seen that we will require
+some control over the standard of Forth programmers if we are to remove
+some old prejudices.  The idea of a controlling body was outlined.
+Precisely how this body is to operate, and under what conditions, is left
+open to discussion.<P>
+All of the material presented is open to correction, question, and
+suggestions.  The intention of this paper is to <EM>provoke discussion</EM>
+within the community.  A full workshop may be required to discuss some of
+these ideas and to develop some firm proposals.<P>
+<H4>7. References</H4>
+<DL>
+<DT> [ANS93]
+<DD> American National Standards Institute, Inc., <em>American National Standard
+	for Information Systems --- Programming Languages --- Forth</em>, June 1993.
+	Standard X3.215-199x, X3J14 dpANS-6.<P>
+<DT> [Bra92]
+<DD> Bradley, Mitch: Open Boot firmware, in <em>Proc. of the Winter 1992 USENIX Conf.</em>, pages
+	223-35, January 1992.<P>
+<DT> [Bro82]
+<DD> Brodie, Leo: <em>Starting Forth</em> (second edition), Prentice Hall International, 1982.<P>
+<DT> [Bro84]
+<DD> Brodie, Leo: <em>Thinking Forth</em>, Prentice Hall International, 1984, Withdrawn from catalog.<P>
+<DT> [Bro90]
+<DD> Brothers, Kent M.: The Forth System Behind VP-Planner: Designing for Efficiency in
+	the face of Complexity, in <em>Proc. Rochester Forth Conf. on Embedded Systems</em>,
+	pages 5-12, June 1990.<P>
+<DT> [Dav92]
+<DD> Davies, Graeme: <em>The 1992 Research Assessment Exercise</em>, a Circular Letter by Graeme Davies,
+	Universities Funding Council, October 1991.<P>
+<DT> [Moo74]
+<DD> Moore, Charles H.: Forth: A new way to program a mini-computer, in <em>Astronomy &AMP;
+	Astrophysics Supplement</em>, 15:497-511, 1974.<P>
+<DT> [OSF91]
+<DD> Open Software Foundataion, <em>ANDF, Application Portability, and Open Systems: A White Paper</em>,
+	technical report O-ANDF-WP17-1, June 1991.<P>
+</DL>
+</body></html>

@@ -1,0 +1,369 @@
+<html>
+<head>
+   <TITLE>Visual Forth by Peter Knaggs</TITLE>
+   <META NAME="Author" CONTENT="Peter Knaggs">
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(9);
+book[1] = new MakeItem("BaB94", 'Bache, R.M, and G. Bazzana: "Software Metrics for Product Assessment", International Software Quality Assurance Series, McGraw-Hill, 1994.');
+book[2] = new MakeItem("BoK96", 'Boyce, R.M, and P.J. Knaggs: TkForth: An interface to the Tk toolkit for ProForth for Windows, "Proceedings of the euroFORTH \'96 Conference", Forth Interest Group, 1996.');
+book[3] = new MakeItem("Dah95", 'Dahm, M: natOOF / The Next generation, "Proceedings of the euroFORTH \'95 Conference", Forth Interest Group, 1995.');
+book[4] = new MakeItem("Hob96", 'Hobden, A: "IEEE 1275-1994 Development System", Honours Project, University of Paisley, 1996.');
+book[5] = new MakeItem("Kna91", 'Knaggs, P.J.: The Cell Type, "Proceedings of the 1991 Rochester Forth Conference", Institute for Applied Forth Research, 1991.');
+book[6] = new MakeItem("Kna95", 'Knaggs, P.J.: Literate Programming in Forth, "Proceedings of the euroFORTH \'95 Conference", Forth Interest Group, 1995.');
+book[7] = new MakeItem("Knu92", 'Knuth, D.E.: "Literate Programming", Center for the Study of Language and Information, Stanford University, 1992.');
+book[8] = new MakeItem("Hel82", 'Helmers, P.H.: Action/Object Representation in Forth, "Proceedings of the 1982 Rochester Forth Conference", Institute for Applied Forth Research, 1982.');
+book[9] = new MakeItem("Wej92", 'Wejgaard, W.: Holon - A New Way of Forth, "Proceedings of the euroFORTH \'92 Conference", Forth Interest Group, 1992.');
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>Visual Forth<BR>
+The Forth Integrated Development Environment</h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+<P>Sketches the history of Forth emphasising Forth's early advantage over
+the traditional procedural languages. The development of Integrated Development
+Environments (IDE) (and their extension to integrated development and debugging
+environment, IDDE) fuelled by the increasing power of desk top systems
+has left Forth behind together with the rise of Windows-based programming,
+with extensive libraries, etc masking the complexity of the API for such.
+The concept of a 'Visual Forth' is introduced together with the requirements
+that this (1) be object orientated; (2) have a Windows programming library;
+(3) provide symbolic debugging. A small worked example of a Forth-like
+IDDE is presented. Finally, the notion that Forth lends itself readily
+to the extension of the IDDE to form a IPSE/CASE tool via support for Literate
+Programming, Version Control, Project Management, and Code Analysis is
+discussed.</P>
+</blockquote>
+<p><hr><p>
+<H4>1. Introduction</H4>
+<P>Forth was first introduced to an unsuspecting world in the early 70s
+when interactive systems were something of a novelty. It is generally accepted
+that its interactive nature was one of Forth's advantages over other, more
+traditional, languages of the time (such as the newly introduced C). The
+Forth development environment, although command based, provided developers
+with a fully integrated system where they could write and test their code
+without going though the tedious edit/compile/link/run cycle required by
+the traditional languages.</P>
+<P>The vendors of these traditional languages investigated the idea of
+an interactive development environment, producing vender specific environments
+for their language(s), whereas the development environment provided by
+Forth vendors was, to large extent, vender independent. Although Forth
+venders did provide additional tools and utilities specific to their system.</P>
+<P>The vendors of other languages developed their programming environments
+into fully integrated development environments (IDEs) taking full advantage
+of the increased processor, sound, and graphics power provided by modern
+hardware (eg, Cobol Workbench, Active Ada, Visual C/C++, Delphi). (There
+is even a Visual Basic, one of the other interpreted languages from the
+mid 70s.) But what happened to Forth in this period? In the early 90s vendors
+finally managed to agree on a standard way of accessing a data file provided
+by an operating system other than one of their own making.</P>
+<P>It is clear from this that the other venders have grasped the nettle
+of providing IDEs. However, they have now gone beyond this by providing
+fully integrated development and debugging environments (IDDEs) with full
+graphic user interfaces (GUIs) and standard programming libraries to allow
+the software developer to develop their own GUI based application without
+needing to know the system in intricate detail. It is supprising that Forth
+vendors have not responded to this technology push, especilly as developers
+now expect these GUI based IDDEs, and simple libraries for making the best
+use of them.</P>
+<P>While it is true that there have been a couple of attempts to provide
+this with Forth (most notably with Win32Forth and ProForth for Windows),
+they do not begin to show the integration or usability that most developers
+are demanding. MPE appear to be the only Forth vender attempting to provide
+this sort of functionality (ie their GUIDE extension to ProForth for Windows).
+All of the IDDEs provide a higher level of programming than the simple
+application programmer interface (API) calls: Object Windows Library (OWL),
+Microsoft Foundation Class (MFC), Abstract Windows Toolkit (AWT), Tcl/Tk,
+etc. One attempt as providing a Forth/Tk interface is discussed in 
+[<a href="javascript:ref('BoK96')">BoK96</a>].</P>
+<H4>2. Visual Forth</H4>
+<P>Given this situation, how can the Forth communicty catch up? One idea
+is to develop a &quot;Visual Forth&quot;, the basic idea being to provide
+a GUI based IDDE for Forth software development. The idea presented here
+goes one step beyond the current IDDEs by providing the developer with
+a number of tools that support/enforce &quot;good practice&quot; in the
+engineering of software. On the face of it a tool of this nature sounds
+very simple, but there is much preparatory work that must be completed
+before one could launch out on such a project.</P>
+<h4><em>2.1. Object Orientated Forth</em></h4>
+<P>A GUI environment is simply too complex to understand easily and thus
+all of the IDDEs provide an object based model to simplify the programming.
+A number of Object Orientated Programming (OOP) extensions to Forth have
+been suggested over the years (from 
+[<a href="javascript:ref('Hel82')">Hel82</a>] to
+[<a href="javascript:ref('Dah95')">Dah95</a>]) yet
+there is no standard extension. A project of this nature would have to
+conduct a survey of the different extensions. It would also have to study
+the OOP paradigm (complete with public/private operations, overloading,
+and multiple inheritance) with the intent of providing a standard/portable
+OOP extension.</P>
+<h4><em>2.2. Windows Programming Library</em></h4>
+<P>It is normal for such a systems to provide a high level (object orientated)
+interface to the supporting windows environment (the IDE is built using
+this interface itself as an example of its power). A programming library
+of this type should be provided for three reasons:</P>
+<OL>
+<LI>The development environment will have to provide access to the underlying
+architecture of the host system/environment.<p></p></LI>
+<LI>Although many Forth applications are for embedded systems, it is common
+for such systems to provide an `umbilical' link to a host system allowing
+the user to configure and interrogate the embedded system from the host.
+Thus it is important for the application developer to have easy access
+to the host environment.<p></p></LI>
+<LI>To provide the Forth programmer with the ability to produce their own
+Windows based applications.</LI>
+</OL>
+<P>Any such interface should be as portable as possible. Linking to one
+of the currently existing APIs (MFC, AWT, Tcl/Tk, etc.) would provide developers
+with a known data model, thus reducing the learning curve.</P>
+<h4><em>2.3. Symbolic Debugging</em></h4>
+<P>The introduction of the second `D' in the move from IDE to IDDE comes
+from the introduction of powerful symbolic debugging systems into the development
+environment. These systems have direct links into both the compiler and
+the editor environment allowing the developer to investigate their code
+using their own variable names, constants, etc. This frees the developer
+from the intellectual burden of having to interpret a memory address into
+a variable name, a number into its meaning, etc. There are few tools for
+this kind of debugging and investigation in Forth, yet with the dictionary
+being such an integrated part of the Forth system, we are in an ideal position
+to provide such a system. In general such tools have not been developed
+for Forth simply because the developer <I>does</I> have access to the dictionary.
+This is not sufficient reason to deny the developer the use of an even
+more powerful tool.</P>
+<H4>3. A Small Worked Example</H4>
+<P>The following is a small example of an Open Boot Firmware system developed
+as part of an Honours project at the University of Paisley
+[<a href="javascript:ref('Hob96')">Hob96</a>].
+Whilst a very simple system it illustrates some of the points of the previous
+section. In the first screen shot we see the full environment: Notice the
+button bar giving access to the various views/operations provided by the
+environment. This example shows the system after a successful compilation.
+The &quot;Output&quot; window shows the output/error report from the compilation
+process.</P>
+<P align=center><IMG SRC="compile.gif" HEIGHT=537 WIDTH=653><BR>
+Open Boot Firmware Integrated Debugging and Development Environment - Main
+Window</P>
+<P>There are a number of options open to developers. They can enter the
+editor to continue development or to correct an error, they can &quot;run&quot;
+their program, or they can enter into the symbolic debugger and single
+step through the program. After entering into run mode a &quot;console&quot;
+window will appear by default. Their program will interact with this window.
+If they were to select the symbolic debugger then four new windows appear:</P>
+<BLOCKQUOTE>
+<TABLE>
+<TR>
+<TD VALIGN=TOP>1</TD>
+<TD VALIGN=TOP>The &quot;Console&quot; window: As with &quot;run&quot;
+mode this will act as the main window for the application. By default all
+interaction with the user will appear via this window.</TD>
+<TD>
+<P align=center><IMG SRC="console.gif" HEIGHT=157 WIDTH=299><BR>
+&quot;Console&quot; Window</P>
+</TD>
+</TR>
+<TR>
+<TD VALIGN=TOP>2</TD>
+<TD VALIGN=TOP>The &quot;Dictionary&quot; Window: This shows the current
+instruction (the highlighted area), giving each instruction its name (as
+taken from the dictionary) if known. In this example, the Forth names are
+not known (it is not necessary to provide the names in Open Firmware),
+so the token number itself is presented. You can redirect the instruction
+pointer by simply clicking on the instruction, this will move the instruction
+pointer to that instruction, which will be executed when you next click
+on the step button. Step into and step over buttons are also provided,
+to allow the developer to investigate subroutines.</TD>
+<TD>
+<P align=center><IMG SRC="dict.gif" HEIGHT=171 WIDTH=157><BR>
+&quot;Dictionary&quot; Window</P>
+</TD>
+</TR>
+<TR>
+<TD VALIGN=TOP>3</TD>
+<TD VALIGN=TOP>The &quot;Stack&quot; Window: The current status of the
+data stack is shown in this window. The values on the stack are shown as
+hex values, but can be switched to decimal values.</TD>
+<TD>
+<P align=center><IMG SRC="stack.gif" HEIGHT=141 WIDTH=129><BR>
+&quot;Stack&quot; Window</P>
+</TD>
+</TR>
+<TR>
+<TD VALIGN=TOP>4&nbsp;&nbsp;</TD>
+<TD VALIGN=TOP>The &quot;Variable Watch&quot; Window: This shows the variables
+associated with the system, and their current value. As with the stack
+windows these values are shown in hex but can be switched (by means of
+an option) to decimal.</TD>
+<TD>
+<P align=center><IMG SRC="watch.gif" HEIGHT=142 WIDTH=159><BR>
+&quot;Variable Watch&quot; Window</P>
+</TD>
+</TR>
+</TABLE>
+</BLOCKQUOTE>
+<P>It should be noted that all four windows are updated with each step
+of the program. Thus for self modifying programs (or complex compilation
+definition) it is possible to see what is being written to the dictionary
+as each value is laid down.</P>
+<P>A final point of interest from this example is the help facility. When
+in the editor, selecting a Forth word and pressing the help key (F1) brings
+up a help screen on that word. Double clicking on an instruction in the
+dictionary window also brings up the help screen for that word. This feature
+is only available for pre-defined words, user defined words would bring
+up a not-found screen or (in the dictionary window) a general description
+of subroutines. The following is an example of double clicking on the highlighted
+instruction in the dictionary windows (the <TT>b(;)</TT> instruction).
+Notice how the description starts with an extract from the ANSI Standard
+document or the IEEE Standard Document (or both) before providing its own
+interpretation if it is thought that the standard definitions require
+clarification.</P>
+<P align=center><IMG SRC="help.gif" HEIGHT=312 WIDTH=652><BR>
+Example Help Screen</P>
+<H4>4. From IDDE to IPSE/CASE</H4>
+<P>A Forth based IDDE&nbsp;would itself be the target of further development.
+If the system were to be made extendable and allow third party &quot;add-ons&quot;
+it would be possible to endow the environment with the additional functionality
+required for a fully integrated project support environment (IPSE) complete
+with computer-aided software engineering (CASE) support. Initially four
+&quot;plug-ins&quot; can be identified that would take the IDDE down to
+road to becomming a IPSE/CASE tool, the first two are specific to Forth
+software development while the latter two would provide more general software
+engineering support:</P>
+<OL>
+<LI><B>Literate Programming:</B> One of the banes of the software developer's
+life is the need to document. Donald Knuth developed his &quot;Literate
+Programming&quot; concept in at attempt to ease this burden
+[<a href="javascript:ref('Knu92')">Knu92</a>]. Knuth's ideas
+apply to Forth particularly well, as Forth promotes the use of the highly
+factored programming style used in literate programming
+[<a href="javascript:ref('Kna95')">Kna95</a>].
+In Forth each word (equivalent to one of Knuth's &quot;chunks&quot;) requires
+three levels of documentation: (1) the design of the word, (2) its `Glossary'
+entry, (3) the source code. If the editor where to enforce the documentation
+of new words, this would mean the application was not only fully documented,
+but its Glossary could be produced automatically.
+<p>
+A `Literate Programming' editor would allow the developer to present their
+code in the most effective way to describe the design of the system or
+application under development. The result would be a full description of
+the application that could be used for internal documentation (eg maintenance).
+The documentation of the design should be broken into chapter and section,
+the editor should provide for this sectioning of the document. The developer
+should be able to print the design document complete with cross referencing
+etc. The Holon system [<a href="javascript:ref('Wej92')">Wej92</a>] is a good
+example of these ideas applied to a Forth development environment.</p></LI>
+<LI><B>Code Analysis:</B> There are currently two main areas of static
+analysis: type checking [<a href="javascript:ref('Kna91')">Kna91</a>] and
+metrics [<a href="javascript:ref('BaB94')">BaB94</a>]. These can be provided
+as two separate extensions. Software metrics
+provide a view of the overall project development/design. Unfortunately
+it is always possible to code this is such a way such that standard metric
+analysis has no meaning!<p></p></LI>
+<LI><B>Version Control:</B> Allow &quot;chunks&quot;, words or complete
+sections of the design document/source to be logged out, worked out and
+when ready, registered with the main database. The system would be able
+to scan the dictionary and generate a list of all the words that would
+need testing before the word could be registered as being correct, thus
+allowing full version control over the project. This would allow a number
+of programmers to work on the same project simultaneously, in that no two
+programmers would be able to book out the same chuck/word/section, but
+they would be able to work with the currently existing version of that
+chunk/word/section, thus allowing them to continue with their own
+development.<p></p></LI>
+<LI><B>Project Management:</B> Given that the programming team are using
+the development system, the system would be able to keep track of the time
+spent coding/documenting/testing of each section of the application, thus
+allowing the project manager to monitor its progress in greater detail.</LI>
+</OL>
+<H4>5. Discussion</H4>
+<P>In the introduction a brief history of compiler development (both Forth
+and more traditional languages) has been given. It is possible to see from
+this history that the vendors of traditional languages learned from the
+success of the interactive development environment provided by Forth (and
+a few other languages). Having grasped the concept they developed advanced
+interactive environments for their own languages going far beyone Forth's
+simple command based interface. Forth compiler developers appear not to
+have noticed this development, or at least not acknowledged it as a challenge
+to the Forth environment. The idea of a &quot;Visual Forth&quot; system
+to bring the Forth development environment up to the same level as other
+IDDE&nbsp;is presented. A number of requirements for such a system is listed.
+A sample application is given which, although it does not address the requirements,
+does demonstrate that the idea of a &quot;Visual Forth&quot; is viable.</P>
+<P>A number of extensions have been suggested (some particular to the Forth
+language, and the Forth method of programming, others aimed at providing
+software engineering support) that would take the &quot;Visual Forth&quot;
+system beyond the capabilities of the most recent IDDE systems into the
+realms of IPSE/CASE.</P>
+<P>The development of the Forth language has been allowed to slip while
+developers concentrate on their applications and introspection focused
+on margenal improvements in efficiency. If Forth is to flourish and develop
+as a language for the development of safety critical systems, the community
+must start to attract new developers, and to extend the tool support to
+surpass that provided for other languages. Current Forth development environments
+are a long way behind the current IDDEs, yet they have the potential to
+out preform these systems without adversly affecting the developers' method
+of working!</P>
+<H4>6. References</H4>
+<DL compact>
+<dt> [BaB94]
+<dd> Bache, R.M, and G. Bazzana: <em>Software Metrics for Product Assessment</em>,
+	International Software Quality Assurance Series, McGraw-Hill, 1994.<p></p>
+<dt> [BoK96]
+<dd> Boyce, R.M, and P.J. Knaggs: TkForth: An interface to the Tk toolkit for
+	ProForth for Windows, <em>Proceedings of the euroFORTH '96 Conference</em>,
+	Forth Interest Group, 1996.<p></p>
+<dt> [Dah95]
+<dd> Dahm, M: natOOF / The Next generation, <em>Proceedings of the euroFORTH
+	'95 Conference</em>, Forth Interest Group, 1995.<p></p>
+<dt> [Hob96]
+<dd> Hobden, A: <em>IEEE 1275-1994 Development System</em>, Honours Project,
+	University of Paisley, 1996.<p></p>
+<dt> [Kna91]
+<dd> Knaggs, P.J.: The Cell Type, <em>Proceedings of the 1991 Rochester Forth
+	Conference</em>, Institute for Applied Forth Research, 1991.<p></p>
+<dt> [Kna95]
+<dd> Knaggs, P.J.: Literate Programming in Forth, <em>Proceedings of the euroFORTH
+	'95 Conference</em>, Forth Interest Group, 1995.<p></p>
+<dt> [Knu92]
+<dd> Knuth, D.E.: <em>Literate Programming</em>, Center for the Study of Language
+	and Information, Stanford University, 1992.<p></p>
+<dt> [Hel82]
+<dd> Helmers, P.H.: Action/Object Representation in Forth, <em>Proceedings of the
+	1982 Rochester Forth Conference</em>, Institute for Applied Forth Research,
+	1982.<p></p>
+<dt> [Wej92]
+<dd> Wejgaard, W.: Holon - A New Way of Forth, <em>Proceedings of the euroFORTH
+	'92 Conference</em>, Forth Interest Group, 1992.<p></p>
+</DL>
+</body></html>

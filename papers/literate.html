@@ -1,0 +1,600 @@
+<html>
+<head>
+<title>Literate Programming in Forth</title>
+<script language="JavaScript">
+<!-- Hide from non JavaScript enabled browsers
+function MakeArray ( max ) {
+  var i = 0;
+  this.length = max;
+  for ( i = 1; i <= max; i++ ) {
+    this[i] = 0;
+  }
+  return this;
+}
+function MakeItem ( ref, text ) {
+  this.ref = ref;
+  this.text = text;
+  return this;
+}
+var book = new MakeArray(11);
+book[1] = new MakeItem("vAK93", 'van Ammers, Eric W, and M. R. Kramer: "The CLiP Style of Literate Programming", Available via anonymous ftp from the CLIP directory of sun01.info.wau.nl, 1993.');
+book[2] = new MakeItem("Bro84", 'Brodie, Leo: "Thinking Forth", Prentice Hall, Now re-printed by the Forth Interest Group, 1984.');
+book[3] = new MakeItem("Kna96", 'Knaggs, Peter J.: Using IBM\'s NetBios from Forth, to appear in the "Journal of Forth Application and Research", 1996.');
+book[4] = new MakeItem("Knu86", 'Knuth, Donald E.: "TeX The Program", Volume B in the series on Computers and Typesetting, Addison-Wesley, 1986.');
+book[5] = new MakeItem("Knu92", 'Knuth, Donald E.: "Literate Programming", Center for the Study of Language and Information, Stanford University.  This is a collection of papers on Literate Programming, 1992 (0-937073-80-6).');
+book[6] = new MakeItem("KnL93", 'Knuth, Donald E. and Silvio Levy: "The CWEB System of Structured Documentation (Version 3.0)", Addison-Wesley, 1993.');
+book[7] = new MakeItem("Pel88", 'Pelc, Stephen: Text File Syntax for Screen File Users, in "euroFORML \'88 Conference Proceeings", pages 171-175.  Available from MPE Ltd, 133 Hill Lane, Southampton SO1 5AF, UK.');
+book[8] = new MakeItem("Ram94", 'Ramsey, Norman: Literate programming simplified, in "IEEE Software", 11(5):97-105, September 1994.');
+book[9] = new MakeItem("Sew89", 'Sewell, Wayne: "Weaving a Program: Literate Programming in WEB", Van Nostrand Reinhold, 1989 (0-442-31946-0).');
+book[10]= new MakeItem("Tho95", 'Thompson, Dave: "Frequently Asked Questions", comp.programming.literate Usenet newsgroup.');
+book[11]= new MakeItem("YSE94", 'York Software Engineering: Literate Formal Development of Ada from Z for Safety critical applications, in "SAFECOMP\'94 Conference Proccedings", 1994.');
+function ref ( n ) {
+  var text = "";
+  for (var i = 1; i <= book.length; i++) {
+    if ( book[i].ref == n ) {
+	text = book[i].text;
+    }
+  }
+  alert("Reference:\n\n[" + n + "]\n" + text);
+}
+function note ( text ) {
+  alert("End Note:\n\n" + text);
+}
+// End of JavaScript -->
+</script>
+</head>
+<body>
+<h2 align=center>Literate Programming in Forth</h2>
+<h3 align=center>Peter J. Knaggs</h3>
+<h4 align=center>
+Department of Computing and Information Systems,<br>
+University of Paisley, High Street,<br>
+Paisley, Scotland. PA1 2BE<p>
+<a href="mailto:pjk@paisley.ac.uk">pjk@paisley.ac.uk</a>
+</h4>
+<p><hr><p>
+<h4 align=center>Abstract</h4>
+<blockquote>
+We look at Donald Knuth's concept of &quot;<em>Literate Programming</em>,&quot; investigating
+exactly what it is and how it is used to assist conventional programmers.  We then ask what 
+lessons we can learn from this idea and if it is possible to apply them to Forth.  If so, then
+what is required and what advantages to we gain by doing so.
+<p>
+Finally some examples of Forth coding techniques are given allowing us to compare the more
+traditional techniques with Knuth's system.
+</blockquote>
+<p><hr><p>
+<h4>1. What is Literate Programming</h4>
+Literate programming was created by Donald Knuth during the development of
+his TeX typesetting system.  It is the combination of documentation and
+source together in a fashion suited for reading by human beings.  In general,
+literate programs combine source and documentation in a single file, referred
+to as a WEB.  Literate programming tools then parse the file to produce either
+readable documentation or compilable source.
+<p>
+All the original work revolves around a particular literate programming
+tool called WEB.  Knuth [<a href="javascript:ref('Knu92')">Knu92</a>] says:
+<blockquote>
+	The philosophy behind WEB is that an experienced system programmer,
+	who wants to provide the best possible documentation of his or her
+	software products, needs two things simultaneously: a language like
+	TeX for formatting, and a language like C for programming.  Neither
+	type of language can provide the best documentation by itself; but
+	when both are appropriately combined, we obtain a system that is much
+	more useful than either language separately.
+	<p>
+	The structure of a software program may be thought of as a web that
+	is made up of many interconnected pieces.  To document such a program
+	we want to explain each individual part of the web and how it relates
+	to its neighbours. The typographic tools provided by TeX give us
+	an opportunity to explain the local structure of each part by making
+	that structure visible, and the programming tools provided by
+	languages such as C or Fortran make it possible for us to specify the
+	algorithms formally and unambigously. By combining the two, we can
+	develop a style of programming that maximizes our ability to perceive
+	the structure of a complex piece of software, and at the same time the
+	documented programs can be mechanically translated into a working
+	software system that matches the documentation.
+</blockquote>
+Knuth's original WEB tool provided a meta-language that allowed the author
+to combine TeX typesetting instructions and PASCAL program instructions.
+Two tools where provided, one converted the WEB file into a TeX file, which
+could in turn be typeset via Knuth's TeX typesetting software.  
+The PASCAL instructions were printed stylisticly, allowing the reader to
+quickly identify keyword, variables, etc.  The order of the WEB file is not
+affected.
+<p>
+The second tool extracts the PASCAL instructions from the WEB file,
+automaticaly re-arranging and expanding the chunks into the correct order
+necessary for the compiler.  The resulting file is compiler-ready and is
+not structured for human consumption.
+<p>
+There are now a large number of WEB tools for specific languages, these
+include Ada, APL2, C and C++, Fortran, Lisp, Maple, Modula-2, Pascal and
+Scheme.  These tools use a number of different typesetting engines, including
+TeX and LaTeX, HTML, roff and unix 'man' page format.  There are a few
+language/typersetter independent tools, most notably Norman Ramsey's noweb
+[<a href="javascript:ref('Ram94')">Ram94</a>] and the CLiP tool
+[<a href="javascript:ref('vAK93')">vAK93</a>].  Indeed Eric van Ammers claims
+[<a href="javascript:ref('Tho95')">Tho95</a>]:
+<blockquote>
+	I have proposed for many years that programming has nothing to do with
+	programming langauges, i.e., a good programmer makes good programs in
+	any language (given some time to learn the syntax) and a bad
+	programmer will never make a good program, no matter the language he
+	uses.
+	<p>
+        The idea of a literate program as a text book should be extended
+	even further. I would like to see a literate program as an (in)formal
+	argument of the correctness of the program.
+	<p>
+        Thus a literate program should be like a textbook on mathematics.
+	A mathematical textbook explains a theory in terms of lemma and
+	theorems. But the proofs are never formal in the sense that they are
+	obtaind by symbol manipulation of a proof checker. Rather the proofs are
+	by so called &quot;informal rigour&quot;, i.e. by very precise and unambiguous
+	sentences in a natural language.
+</blockquote>
+The CADiZ tool [<a href="javascript:ref('YSE94')">YSE94</a>] takes this idea further in that it allows
+one to formally specify and derive an Ada program by semi-automatic means.
+The final document being a full description of the process.  A tool is
+provided to extract the Ada program code into a compiler ready form.
+<h4>2. How does this differ from verbose commenting</h4>
+There are three distinguishing characteristics of literate programming.  In
+order of importance, they are:
+<ul>
+<li> flexible order of elaboration
+<li> automatic support for browsing
+<li> typeset documentation, especially diagrams and mathematics
+</ul>
+<h4><em>2.1. Flexible order of elaboration</em></h4>
+This enables the author to divide the source program into chunks and write
+the chunks in any order, independent of the order required by the compiler.  
+In principle, you can choose the order best suited to explaining what you are
+doing.  More subtly, this discipline encourages the author of a literate
+program to take the time to consider each fragment of the program in its
+proper sphere, eg, not to rush past the error checking to get to the &quot;good
+parts.&quot;  In its time and season, each part of the program is a good part.
+<p>
+The reordering is especially useful for encapsulating tasks such as input
+validation, error checking, and printing output fit for humans --- all tasks
+that tend to obscure &quot;real work&quot; when left inline.
+<h4><em>2.2. Automatic support for browsing</em></h4>
+Tools are available for manipulating literate programs, including the
+automatic generation of a table of contents, index, and cross-reference of
+the program.  Cross-reference might be printed, so that you could consult an
+index to look up the definition of an identifier 'foo'.  With good tools, you
+might get a printed mini-index on every page if you wanted.  Or if you can
+use a hypertext technology, cross-reference might be as simple as clicking on
+an identifier to reach its definition.  
+<p>
+Indexing is typically done automatically or 'semi-automatically', the latter
+meaning that identifier definitions are marked by hand.  Diligently done
+semi-automatic indexes seem to be best, because the author can mark only the
+identifiers he or she considers important, but automatic indexing can be
+almost as good and requires no work.  Some tools allow a mix of the two
+strategies.
+<h4><em>2.3. Typeset documentation</em></h4>
+Whilst you may not use diagrams or mathematics often it would be very
+difficult to describe some systems without them.  Diagrams and tables are
+very useful for summarising ideas etc.
+<p>
+Literate programming tools work with a number of different typesetting
+engine, normally TeX, roff or HTML but rather unusually WYSIWYG is not
+generally supported.  This is because the data formats used in wysiwyg
+products are proprietary, and they tend to be documented badly if at all.
+They are subject to change at the whim of the manufacturer.  These conditions
+make it nearly impossible to write tools, especially tools that provide
+automatic indexing and cross-reference support.
+<p>
+People use TeX, roff and HTML because free implementations of these tools
+are widely available on a variety of platforms.  TeX and HTML are well
+documented, and TeX and roff are stable.  TeX is the most portable, it
+was also developed by Donald Knuth as a literate program
+[<a href="javascript:ref('Knu86')">Knu86</a>], thus it is not suprising that
+the first literate programming tools used TeX as their typesetting engine.
+<h4>3. Relating it to Forth</h4>
+To see how literate programming can be of use to Forth, we look at the
+benefits it brings to traditional imperative languages and see how these
+may be transfered to Forth.  Knuth claims that literate programming 
+increases the maintainability and quality of software by improving its
+factoring and readability, leading to the inevitable productivity and 
+salary increase.
+<dl>
+<dt> <b>Factoring:</b>
+<dd>
+With file based langauges it is quite common to see a single function
+definition of 80 lines or more.  This is normally because the function 
+is required to hold the full text of the algorithm it is implementing.
+Whilst it is possible to break the algorithm down further the overhead
+associated with defining the relevant functions outways its usefulness.
+<p>
+To improve this situation Knuth introduced a decomposition facility
+into his meta-language.  This allows one to break up the definition
+into its constituant parts without the need for defining new functions.
+Thus we are able to decompose the algorithm, discussing both it and
+its implementation in a more natural way, with the various parts being
+defined and discussed in their natural place.  A tool is provided to
+collect the various parts together and reconstitute them into the
+correct order.
+<p>
+<dt> <b>Readability:</b>
+<dd>
+By allowing us to use a more natural literary style of writing to 
+describe the application, we are free to discuss the design decisions
+and constraints that have led to certain intricases in the
+implementation.  Presenting this discussion in book form allows us to 
+break it up into discrete sections.
+<p>
+We are thus able to use the decomposition capability built into the
+meta-language to provide multiple levels of abstraction, with the
+book being broken into parts or chapters.  We could start with a highly
+abstract description of the software working in more detail as we 
+move through the book [<a href="javascript:note('With the development
+ of object-oriented programming and intelligent agents it would be
+ possible to introduce the agents as characters in a novel, developing
+ their character throught the novel until eventually we know all there
+ is to know about the characters and their relationships.')">1</a>].
+<p>
+Knuth believes that creating a program should be viewed as creating a
+work of art.  The resault will automatically be more readably as the 
+author's intentions will be laid out in much more detail.  The reader
+will have seen the development of the software through its description.  
+Such descriptions should be of interest to any programmer.  How often 
+have you wanted to have a quick look at the code just to see how he 
+did that little bit?
+<p>
+<dt> <b>Maintainability:</b>
+<dd>
+Better factoring will lead to more well thought out development.  The
+literary style of presentation allows us to not only lay out the 
+software better, but to discuss the algorithms and their intricases
+in detail.  When an alteration is required it should be fairly obvious
+which part, chapter or section of the book will need to be altered.  
+<p>
+As the system has been fully described we can read the intention of 
+the original author.  We are then required to re-write the relevant
+section of the book to reflect the desired alteration.  This technique 
+is not of much use for run of the mill debugging, but is much more 
+useful for long term maintenance.
+<p>
+<dt> <b>Quality:</b>
+<dd>
+As we are now dealing with a document rather than a program we can 
+apply more normal quality control techniques.  WEB tools allow us to 
+extract program code from the document thus we are able to apply 
+normal programming quality control techniques.
+<p>
+With better factoring and documentation it is inevitable that we will
+be able to understand it better.  Along with this understanding comes
+improved maintainability.  If the software is easer to maintain,
+is better documented and better structured in the first place this
+has to lead to better quality software.  This has a knock on effect
+in that a better quality program will command a better price and thus
+your salary will improve.
+<p>
+</dl>
+So, what lessons can we learn?  The underlying philosophy of Forth
+[<a href="javascript:ref('Bro84')">Bro84</a>] means that our programs are
+well factored.  Forth's 'define before use' rubric forces us to use a
+bottom-up approach to our system development.  By adopting the
+re-organising aspect of the meta-language we are able to adopt the
+top-down or middle-out approaches.
+<p>
+To obtain the benefits of Knuth's system he relies heavily on a change
+of emphasis.  Moving away from program development, to the development 
+of a maintenance manual for later use.  The program just happens
+to appear as a side effect of developing the manual.  It goes without
+saying that the vast majority of Forth code is very badly documented, if
+at all.  Adopting Knuth's change of emphasis when writing Forth software
+will bring the same benefits, primarly readability and maintainability.
+<p>
+It is often said that Forth, like C, is a &quot;write only language.&quot;
+The adoption of literate programming has done much to make C a readable
+language, and as a consequence made it more maintainable.  If it can
+transform a cryptic notation such C, it must surely be able to make
+Forth more readable, and thus more maintainable.
+<h4>4. Comparison</h4>
+In order to compare Literate Programming with other, more traditional,
+methods of programming we look at a sample fragment of code using both
+the traditional and new methods.  The code chosen is a small fragment
+(the memory management section) from a network &quot;chat&quot; application
+[<a href="javascript:ref('Kna96')">Kna96</a>] written a few years ago.   We
+first view this in the traditional Forth block or screen
+(<a href="#Annx:A">Appendix A</a>), then in a more modern file form
+(<a href="#Annx:B">Appendix B</a>) and finally in a simple rendition of
+the literate programming form (<a href="#Annx:C">Appendix C</a>).
+<h4><em>4.1. The Forth Block</em></h4>
+In <a href="#Annx:A">Appendix A</a> we see the code as a traditional Forth screen,
+or block.  The first line is an index line, used to give a general title to 
+the block.  The index line has lead to the practice of collecting together
+related definitions into the same block or sequence of blocks.  In this 
+example we have gathered together the definitions relating to the memory 
+management of the application.  Thus making it easy to find and concentrate 
+on for debugging purposes.
+<p>
+The text on the right of the index line is an indication of last time the
+block was modified (<i>10-May-1990</i>) and by whom (<i>PjK</i>).
+This is placed on the block automatically by the Forth++ editor and is useful
+for maintenance and project management reasons.
+<p>
+One of the drawbacks of using blocks is that the space is limited and one is
+tempted to shoehorn the code and not document it.  For this reason the
+&quot;shadow&quot; block was developed to allow documentation of the code presented 
+in the associated block (as shown in the example).  Normally the two blocks 
+are printed side by side, thus making it obvious which code is referred to in
+the shadow (or &quot;comment&quot;) block.  The shadow block provides us with an 
+extremely useful documentation technique, yet it is suprising how many
+seasoned Forth programmers do not bother with the shadow block, thus 
+increasing the difficulty of maintenance.
+<h4><em>4.2 The File</em></h4>
+The second form, that of a source file, is presented in <a href="#Annx:B">Appendix B</a>.
+In order to keep some of the advantages of source blocks it is common to split
+a source file into a number of pages [<a href="javascript:ref('Pel88')">Pel88</a>].
+As with the source block we see the first line has a summary describing the intention
+of the page.  Thus we can collect related definitions into a single source page.  Note
+how the second line identifies the last time the page was updated and by whom,
+just as we did on the source block.
+<p>
+The file does release us from the space constraints of the block.  This means 
+that we no longer need to cramp the code and we can now include comments with
+our code much more readly.  This can be seen quite clearly with the definition
+of <code>ncbs</code> where a single line of code has been split into three lines,
+each of which with an associated comment.
+<p>
+Source files do however have their drawbacks.  The limited space of the block
+has been removed thus one is now able to make a definition that would not fit 
+on a single source block, losing the good factoring that is a hallmark of a
+well written Forth program.  As with other file based languages it is up to the 
+programmer to include documentation, he may include anything from a large 
+ammount of comments to none at all.  Just as I find the limited use of shadow
+blocks suprising, it is just as suprising to see how comment-free source
+files are.  This problem is shared with other langauges and was one of the 
+seeds that gave rise to the development of literate programming.
+<h4><em>4.3 Literate Programming</em></h4>
+Finally <a href="#Annx:C">Appendix C</a> shows the code as it would appear, as a section
+of a book (say <b>1.2 Memory Handling</b>), under literate programming.  The book 
+would make up a full description of the application, presenting, in a simular 
+form, all of the application code.  The main intention of literate programming
+is to produce a book that can be used to maintain the program, indeed the program
+should be machanically extracted from the same file that produced the book, thus
+improving the creadability and usefulness of the book.
+<p>
+The comments, or commentary as we should now call it, can be clearly distinguished
+from the program code.  This allows us to mark out the difference between a 
+reference to a variable or definition from a general concept in the commentary.
+Ie, <small>NCB</small> is referring to the concept while <code>NCB</code> is referring to the Forth
+definition and <i>ncb</i> refers to the stack item.
+<p>
+As with the previous systems, we are able to collect together all the code 
+relating to a single topic into a single section.  Unlike the previous systems,
+we can also distribute code (say initialisation code) throughout the document
+(via the decomposition system) whichever is more useful to us.
+<p>
+As we are using files, we still have the drawback that a very long definition
+could be given.  This is overcome by the philosophy of literate programming which
+promotes the use of good factoring of problems.  The decomposition mechanism was
+provided explicitly to help with the factoring of complex algorithms.  It should
+be noted that we have not used the decomposition capabilities in this extract as 
+a well written Forth program should not need them.
+<h4>5. Conclusions</h4>
+We have seen how Knuth's &quot;Literate Programming&quot; system can
+increase the maintainability and quality of software by improving
+its factoring and readability.  This is achived by a simple change
+of emphasis from the production of software to the production of
+documentation.
+<p>
+Can we apply these ideas to Forth?  Yes, although not by simply
+adopting the change of emphasis.  In order to assist in this
+change of emphasis Knuth had to introduce a decomposition mechanism
+into his system, via a meta-language.  As Forth is well disposed
+to decomposition, via factoring, it would appear that we do not
+need to adopt this side of the system.
+<p>
+There is another aspect of the meta-language that is just as 
+important to the sucsess of the system, this is the ability to
+move the definition and discussion of code to a more relevant
+part of the description.  Adding such a facility to Forth would
+free us from the bottom-up approach inposed by the 'define before
+use' nature of the dictionary.  We would be allowed to use the
+top-down or middle-out approaches to software development.
+<p>
+With the reordering aspect of the meta-langauge implemented we
+are now in a position to make the change of emphasis proposed
+by Knuth.  There is no reason to suppose the advantanges of
+using Knuth's approach would not apply to Forth.  Thus it would
+be possible to improving the readability, maintainability and
+quality of Forth programs.  This would naturally lead on to an
+increased pleasure in programming and, as the quality of the
+software has improved, an increase in our salary.
+<p>
+It is interesting to note how one of the major claims for
+literate programming is that it provides imperative languages 
+with a usable factoring mechanism.  Something which is
+fundamental to the basic design of the Forth language.
+<h4>6. References</h4>
+<dl compact>
+<dt> [vAK93]
+<dd> van Ammers, Eric W, and M. R. Kramer: <em>The CLiP Style of Literate Programming</em>,
+	Available via anonymous ftp from the CLIP directory of
+	<a href="ftp://sun01.info.wau.nl/">sun01.info.wau.nl</a>, 1993.
+<p>
+<dt> [Bro84]
+<dd> Brodie, Leo: <em>Thinking Forth</em>, Prentice Hall,
+	Now re-printed by the Forth Interest Group, 1984.
+<p>
+<dt> [Kna96]
+<dd> Knaggs, Peter J.: Using IBM's NetBios from Forth, to appear in the
+	<em>Journal of Forth Application and Research</em>, 1996.
+<p>
+<dt> [Knu86]
+<dd> Knuth, Donald E.: <em>TeX The Program</em>, Volume B in the series on
+	Computers and Typesetting, Addison-Wesley, 1986.
+<p>
+<dt> [Knu92]
+<dd> Knuth, Donald E.: <em>Literate Programming</em>, Center for the Study of Language
+	and Information, Stanford University.  This is a collection of papers on Literate
+	Programming, 1992 (0-937073-80-6).
+<p>
+<dt> [KnL93]
+<dd> Knuth, Donald E. and Silvio Levy: <em>The CWEB System of Structured Documentation
+	(Version 3.0)</em>, Addison-Wesley, 1993.
+<p>
+<dt> [Pel88]
+<dd> Pelc, Stephen: Text File Syntax for Screen File Users, in
+	<em>euroFORML '88 Conference Proceeings</em>, pages 171-175.
+	Available from MPE Ltd, 133 Hill Lane, Southampton SO1 5AF, UK.
+<p>
+<dt> [Ram94]
+<dd> Ramsey, Norman: Literate programming simplified, in <em>IEEE Software</em>,
+	11(5):97-105, September 1994.
+<p>
+<dt> [Sew89]
+<dd> Sewell, Wayne: <em>Weaving a Program: Literate Programming in WEB</em>,
+	Van Nostrand Reinhold, 1989 (0-442-31946-0).
+<p>
+<dt> [Tho95]
+<dd> Thompson, Dave: <em>Frequently Asked Questions</em>,
+	<code>comp.programming.literate</code> Usenet newsgroup.
+<p>
+<dt> [YSE94]
+<dd> York Software Engineering: Literate Formal Development of Ada from Z for Safety
+	critical applications, in <em>SAFECOMP'94 Conference Proccedings</em>, 1994.
+</dl>
+<h4>End Notes</h4>
+<ol>
+<li>	With the development of object-oriented programming and intelligent agents
+	it would be possible to introduce the agents as characters in a novel,
+	developing their character throught the novel until eventually we know all
+	there is to know about the characters and their relationships.
+</ol>
+<p><hr><p>
+<a name="Annx:A"><h3>A. Screen</h3></a>
+<pre>
+ 1 ( NETCHAT - Reserve Memory                          PjK 10MAY90)
+ 2
+ 3 : STRING WORD C@ 1+ ALLOT ;
+ 4 CREATE NET-CHAT BL STRING NET-CHAT
+ 5
+ 6 CREATE ncbs   ncb_size 5 * ALLOT   ncbs ncb_size 5 * ERASE
+ 7 CREATE buff         60 5 * ALLOT   buff       60 5 * ERASE
+ 8
+ 9 : NCB  ( n -- a ) ncb_size * ncbs + ;
+10 : BUFF ( n -- a )       60 * buff + ;
+11
+12 : name ( n -- a n NCB ) DUP BUFF SWAP 60 SWAP NCB ;
+13
+14
+15
+16
+</pre>
+<pre>
+ 1 This screen will reserve the memory buffers to be used.
+ 2
+ 3 It first defines the word STRING to compile a counted string.
+ 4 The word NET-CHAT is then defined as a counted string.
+ 5
+ 6 Memory is reserved for 5 NCBs (one outgoing, four incoming)
+ 7 Memory is also reserved for 5 buffers (of 60 chars each)
+ 8
+ 9 NCB    returns the address of NCB number n.
+10 BUFF   returns the address of text buffer n.
+11 A precondition for these operations is that 0 <= n < 5
+12
+13 The word  name  is defined to provide the parameter information
+14 for a Datagram Receive on a given buffer number.
+15
+16
+</pre>
+<p><hr><p>
+<a name="Annx:B"><h3>B. File</h3></a>
+<pre>
+\ Page 3: NETCHAT - Reserve Memory
+\ Last Modified by Peter J. Knaggs 10-May-90
+\ In this page we reserve the memory buffers used by the NetChat application.
+\ We also define words to provide easy access to these buffers.
+\ We start be defining a word (STRING) that will allow us to compile a
+\ counted string literal, which we go on to use to define the common name
+\ used in the application.
+: STRING ( -- )
+  WORD C@ 1+ ALLOT
+;
+\ The word NET-CHAT is then defined as a counted string.
+CREATE NET-CHAT BL STRING NET-CHAT
+\ Memory is reserved for 5 NCBs (one outgoing, four incoming)
+\ Memory is also reserved for 5 buffers (of 60 chars each)
+CREATE ncbs                 \ Define the base area
+       ncb_size 5 * ALLOT   \ Reserve space for five NCBs
+  ncbs ncb_size 5 * ERASE   \ Clear the memory like a good boy
+CREATE buff                 \ Define the base address
+         60 5 * ALLOT       \ Reserve space for five buffers
+   buff  60 5 * ERASE       \ Clear the memory
+\ We now define two words NCB and BUFF to return the address of the given
+\ ncb or buffer.  They take one item from the stack which must be between
+\ 0 and 4 (inclusive), giving access to five ncbs or buffers.
+: NCB  ( n -- a )
+  ncb_size * ncbs +             \ NCBs are ncb_size characters long
+;
+: BUFF ( n -- a )
+  60 * buff +                   \ Buffers are 60 characters long
+;
+\ Finally (for this page) we define a new word  name  to provide the
+\ parameter information for a Datagram Receive request on a given buffer.
+: name ( n -- a n NCB )
+  DUP BUFF SWAP 60 SWAP NCB
+;
+</pre>
+<p><hr><p>
+<a name="Annx:C"><h3>C. Literate Program</h3></a>
+<i><b>Note:</b> Due to limitations with HTML we are unable to render this section
+as we would like (as it appears in the PostScript version of this paper).  Particularly
+comments in the code fragments will appear in the wrong font.  Additionally
+<small>NCB</small> should appear as &quot;small caps&quot;, if it does not, then you
+should upgrade your browser to a HTML/3.2 compatible version.
+</i>
+<p>
+The first part of the application is to reserve the memory buffers that are
+going to be used.  This section not only reserves the memory but also
+defines words that allow easy access to this memory.
+<p>
+We are going to require five <small>NCB</small>s and buffers.  We first reserve the
+space for the five <small>NCB</small>s (one outgoing, four incoming).  The number
+of bytes to reserve is calculated by multiplying the number of bytes
+required for an <small>NCB</small> (<code>ncb_size</code>) by five.  We then initialise
+this memory to zeros using the <code>ERASE</code> word.
+<pre>
+  <code>CREATE ncbs                 \</code> Define the base area
+  <code>       ncb_size 5 * ALLOT   \</code> Reserve space for five <small>NCB</small>s
+  <code>  ncbs ncb_size 5 * ERASE   \</code> Clear the memory like a good boy
+</pre>
+Thus the word <code>ncbs</code> will return the start address of a block of
+memory large enough to hold five <small>NCB</small>s.  We now define a word
+<code>NCB</code> that take an <small>NCB</small> number (<i>n</i>) and returns the 
+address (<i>a</i>) of the indicated <small>NCB</small> from our table.
+<pre>
+  <code>: NCB  ( </code><i>n</i><code> -- </code><i>a</i><code> )</code>
+  <code>  ncb_size * ncbs +         \</code> <small>NCB</small>s are <code>ncb_size</code> characters long
+  <code>;</code>
+</pre>
+Now we do the same for the data buffers.  This time the buffers are 60 bytes
+long and is given the name <code>buff</code>, while the accessing word is called
+<code>BUFF</code>.
+<pre>
+  <code>CREATE buff                 \</code> Define the base address
+  <code>         60 5 * ALLOT       \</code> Reserve space for five buffers
+  <code>   buff  60 5 * ERASE       \</code> Clear the memory
+  <code>: BUFF ( </code><i>n</i><code> -- </code><i>a</i><code> )</code>
+  <code>  60 * buff +               \</code> Buffers are 60 characters long
+  <code>;</code>
+</pre>
+We now define the word <code>name</code> that takes an <small>NCB</small> number (<i>n</i>)
+and initialises the stack ready for a NetBios call to the <em>Datagram Receive</em> function,
+placing the corresponding buffer address (<i>buff</i>), the maximum size of the buffer
+(<i>60</i>) and the indicated <small>NCB</small> (<i>NCB</i>) on the stack.
+<pre>
+  <code>: name ( </code><i>n</i><code> -- </code><i>buff 60 NCB</i><code> )</code>
+    <code>DUP BUFF SWAP NCB 60 SWAP</code>
+  <code>;</code>
+</pre>
+<p><hr>
+</body></html>
