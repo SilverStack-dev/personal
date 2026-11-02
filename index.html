@@ -19,38 +19,11 @@ span   { font-weight:   bold;   }
 th     { text-align:	left;   }
   </style>
 
-  <script type="text/javascript">
-var size = 5;
-var oldsel = 5;
-var timer = setTimeout("",10);
+  <script type="text/javascript" src="rotateImages.js"></script>
 
-function inc(n) {
-	return 1 + (n % size);
-}
-
-function select(n) {
-	clearTimeout(timer);
-
-	var pic = document.images.pic;
-	pic.src = './images/pjk' + n + '.gif';
-	pic.alt = "Photo " + n;
-	pic.title = pic.alt;
-
-	var sel = document.getElementById("sel" + oldsel);
-	sel.style.fontWeight = "normal";
-	sel.style.textDecoration = "underline";
-	oldsel = n;
-
-	sel = document.getElementById("sel" + n);
-	sel.style.fontWeight = "bold";
-	sel.style.textDecoration = "none";
-
-	timer = setTimeout("select(inc(oldsel))", 10000);
-}
-  </script>
 </head>
 
-<body onload="select(inc(Math.round(Math.random() * 100)))">
+<body>
 <h1>Dr. Peter Knaggs</h1><hr />
 
 <!-- ===================================================================== -->
@@ -70,17 +43,13 @@ function select(n) {
 <!-- ====================================================================== -->
 
 <div id="photo">
-	<script type="text/javascript">
-	for(n = 1; n <= size; n++) {
-		document.write(' [<a href="javascript:select(' + n + ')" ');
-		document.write('id="sel' + n + '">');
-		document.write(n);
-		document.writeln('</a>]');
-	}
-	document.writeln("<br/>");
-	</script>
-
-	<img src="./images/pjk5.gif" title="Photo" alt="Photo" id="pic" />
+	[<a id="sel-1" class="img-select">1</a>]
+	[<a id="sel-2" class="img-select">2</a>]
+	[<a id="sel-3" class="img-select">3</a>]
+	[<a id="sel-4" class="img-select">4</a>]
+	[<a id="sel-5" class="img-select">5</a>]
+	<br />
+	<img src="./images/pjk5.gif" title="Photo 5" alt="Photo 5" id="pic" style="margin: 5px 0;" />
 </div>
 
 <dl>
